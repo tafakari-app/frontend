@@ -2,7 +2,5 @@
 Readme file for *Tafakari* repo.  
 
 ### Languages & Tools
-- HTML
-- CSS
-- BootStrap
-- JavaScript
+- React Native
+- Tailwind CSS
