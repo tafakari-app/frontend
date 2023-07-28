@@ -12,9 +12,9 @@ git clone https://github.com/tafakari-app/frontend.git
 ```
 - Change dir:
 ```
-c frontend
+cd frontend
 ```
-- Install dependancies:
+- Install dependencies:
 ```
 npm install
 ```
