@@ -1,6 +1,6 @@
 ### Tafakari
-Readme file for *Tafakari* repo.  
+Readme file for *frontend* repo.  
 
 ### Languages & Tools
-- React Native
-- Tailwind CSS
+- React Native (JavaScript)
+- Expo
