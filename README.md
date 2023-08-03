@@ -26,3 +26,8 @@ npm install
 npx expo start
 ```
 - Scan QR code(Terminal) using Expo Go app
+
+
+## Figma Designs
+Our project has all its files located here 
+https://www.figma.com/file/6t9cd1JUvsxBRWChdrJOZf/tafakari-app?type=design&node-id=0%3A1&mode=design&t=CMpsDUDcdukgTRjc-1
