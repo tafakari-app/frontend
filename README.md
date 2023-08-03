@@ -29,5 +29,4 @@ npx expo start
 
 
 ## Figma Designs
-Our project has all its files located here 
-https://www.figma.com/file/6t9cd1JUvsxBRWChdrJOZf/tafakari-app?type=design&node-id=0%3A1&mode=design&t=CMpsDUDcdukgTRjc-1
+Our project has all its files located here [Designs](https://www.figma.com/file/6t9cd1JUvsxBRWChdrJOZf/tafakari-app?type=design&node-id=0%3A1&mode=design&t=CMpsDUDcdukgTRjc-1)
