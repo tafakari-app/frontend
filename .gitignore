@@ -36,3 +36,6 @@ yarn-error.*
 
 # package-lock
 package-lock.json
+
+# test
+test.txt

@@ -47,6 +47,8 @@ function BottomTabsRoot({ navigation }) {
               width: 375,
               height: 93,
               flexDirection: "row",
+              justifyContent: "space-around", // Added to space items evenly
+              alignItems: "center", // Added to center items vertically
             }}
           >
             {bottomTabItemsNormal.map((item, index) => {

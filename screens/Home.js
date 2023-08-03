@@ -14,7 +14,7 @@ const Home = () => {
       <ScrollView
         style={styles.groupParent}
         horizontal={false}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.frameScrollViewContent}
       >
