@@ -1,32 +1,41 @@
 import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { FontSize, Color, Border, FontFamily } from "../GlobalStyles";
 
-const CardContainer = ({ textContent }) => {
+const CardContainer = ({ textContent, description, videolink }) => {
   return (
-    <View style={[styles.rectangleParent, styles.rectangleLayout]}>
-      <View style={[styles.rectangle, styles.watchPosition]} />
-      <Image
-        style={[styles.maskGroupIcon, styles.watchPosition]}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
-      <View style={styles.peerGroupMeetup}>
-        <Text style={styles.lorem}>{textContent}</Text>
-        <Text style={[styles.description, styles.authorTypo]}>Description</Text>
+
+    <View className="mt-5 py-5 flex flex-row bg-[#FEF3E7] rounded-xl justify-between items-center" >
+      <View className="flex mt-4 px-4">
+        <Text style={styles.lorem} className="text-[22px] mb-3 font-bold text-[#573926]">
+          {textContent}
+        </Text>
         <Text style={[styles.author, styles.authorTypo]}>Author</Text>
-        <View style={[styles.watchNow, styles.watchLayout]}>
-          <View style={[styles.watchNowChild, styles.watchLayout]} />
-          <Text style={[styles.watch, styles.watchPosition]}>Watch</Text>
-          <Image
-            style={styles.groupIcon}
-            contentFit="cover"
-            source={require("../assets/media-play-icon.png")}
-          />
-        </View>
+
+        <Text
+          style={[styles.description, styles.authorTypo]}
+          className="text-md mb-3 font-[12px] text-[#371B34]"
+        >
+          {description}
+        </Text>
+
+        <TouchableOpacity>
+          <View style={[styles.watchNow, styles.watchLayout]}>
+            <View style={[styles.watchNowChild, styles.watchLayout]} />
+            <Text style={[styles.watch, styles.watchPosition]}>Watch</Text>
+
+            <Image
+              style={styles.groupIcon}
+              contentFit="cover"
+              source={require("../assets/media-play-icon.png")}
+            />
+          </View>
+        </TouchableOpacity>
+
       </View>
     </View>
+
   );
 };
 

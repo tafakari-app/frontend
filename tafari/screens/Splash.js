@@ -1,28 +1,36 @@
-import * as React from "react";
-import { Text, StyleSheet, StatusBar, View } from "react-native";
-import { FontFamily, Color } from "../GlobalStyles";
+import React from 'react';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 
 const Splash = () => {
   return (
-    <View className="flex-1 bg-[#FE8235]">
-      <StatusBar  hidden  />
-      <View className='flex flex-1 justify-center items-center bg-[#FE8235]'>
+    <View style={styles.container}>
+      <StatusBar hidden />
+      <View style={styles.content}>
         <Text style={styles.splashText}>tafakari</Text>
       </View>
     </View>
-
   );
 };
 
 const styles = StyleSheet.create({
-  splashText: {
-    fontSize: 40,
-    fontWeight: "800",
-    fontFamily: FontFamily.epilogueExtraBold,
-    color: Color.white,
-    textAlign: "center",
+  container: {
+    flex: 1,
+    marginBottom:-50,
+    marginTop:-50,
+    backgroundColor: '#FE8235',
   },
-
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FE8235',
+  },
+  splashText: {
+    // Your text styles here
+    fontSize: 24,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
 });
 
 export default Splash;

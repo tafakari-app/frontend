@@ -28,18 +28,11 @@ const Home = () => {
 
   return (
     <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
-      <StatusBar light className="bg-[#fbfbfb]" />
+      <StatusBar barStyle="dark-content" />
       <SectionGreetings />
 
       <ScrollView
-<<<<<<< HEAD:screens/Home.js
-        style={styles.groupParent}
-        horizontal={false}
-        showsVerticalScrollIndicator={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.frameScrollViewContent}
-=======
-        className="mt-3 mx-4 mb-32"
+        className="mt-3 mx-4 mb-16"
         showsVerticalScrollIndicator={false}
 >>>>>>> 7af4465ff06f417e1709174a85cd3c98fd1395bf:tafari/screens/Home.js
       >

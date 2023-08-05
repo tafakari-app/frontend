@@ -28,7 +28,7 @@ const AppBottomTabs = () => {
         tabBarStyle: {
           backgroundColor: "#FFFFFF",
           borderTopWidth: 0,
-          height: 80,
+          height: 40,
           position: "absolute",
           bottom: 0,
           left: 0,
