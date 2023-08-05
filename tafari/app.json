@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "tafari",
+    "slug": "tafari",
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
