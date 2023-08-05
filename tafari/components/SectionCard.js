@@ -37,7 +37,7 @@ const SectionCard = () => {
         />
       </View>
       <Text style={styles.welcomeBackSarinaContainer}>
-        <Text style={styles.textTypo}>Good Afternoon</Text>
+        <Text style={styles.textTypo}>Hi</Text>
         <Text style={styles.text1}>{`, `}</Text>
         <Text style={styles.sarina}>Sarina!</Text>
       </Text>

@@ -1,52 +1,116 @@
 import * as React from "react";
-import { StyleSheet, View, ScrollView, Text } from "react-native";
+import { StyleSheet, View, ScrollView, StatusBar, TouchableOpacity, Text } from "react-native";
 import { Image } from "expo-image";
-import SectionCard from "../components/SectionCard";
 import SelfConquerorContainer from "../components/SelfConquerorContainer";
 import FeelingSection from "../components/FeelingSection";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
+import SectionGreetings from "../components/SectionGreetings";
+import tw from "twrnc";
+import { getTimeOfDay } from "../utils/GetGrettings";
+import { Feather, Ionicons } from '@expo/vector-icons';
+
+
+
 
 const Home = () => {
+  const feelings = [
+    { name: 'Happy', icon: 'smile', color: '#FFC107' },
+    { name: 'Sad', icon: 'frown', color: '#2196F3' },
+    { name: 'Excited', icon: 'heart', color: '#E91E63' },
+    { name: 'Angry', icon: 'user-x', color: '#F44336' },
+    { name: 'Anxious', icon: 'wind', color: '#FF9800' },
+    { name: 'Depressed', icon: 'x-circle', color: '#9C27B0' },
+    { name: 'Stressed', icon: 'zap-off', color: '#4CAF50' },
+  ];
+
+  // function to get the greetings in the day
+  const greeting = getTimeOfDay();
+
   return (
-    <View style={styles.home}>
-      <SectionCard />
-      <View style={styles.shadow} />
+    <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
+      <StatusBar light className="bg-[#fbfbfb]" />
+      <SectionGreetings />
+
       <ScrollView
-        style={styles.groupParent}
-        horizontal={false}
+        className="mt-3 mx-4 mb-32"
         showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.frameScrollViewContent}
       >
-        <View style={styles.groupLayout}>
-          <View style={[styles.rectangle, styles.rectangleLayout]} />
-          <Image
-            style={[styles.maskGroupIcon, styles.maskGroupIconPosition]}
-            contentFit="cover"
-            source={require("../assets/mask-group.png")}
-          />
-          <View style={styles.peerGroupMeetup}>
-            <Text style={[styles.library, styles.libraryClr]}>Library</Text>
+        {/* Greetings section */}
+        <View className="flex mt-3 flex-row mb-3">
+          <Text className="text-2xl font-bold text-[#371B34]">
+            <Text className="font-medium">{greeting}, </Text> {'\n'}
+            Brian!
+          </Text>
+        </View>
+
+
+        {/* Self Conqueror and feelings section */}
+        <View style={styles.container}>
+          <Text style={styles.heading}>How are you feeling today?</Text>
+          <ScrollView
+            horizontal
+            className="py-3"
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+          >
+            {feelings.map((feeling, index) => (
+              <View key={index} className="flex align-middle">
+                <TouchableOpacity key={index} style={[styles.feelingBox, { backgroundColor: feeling.color }]}>
+                  <Feather name={feeling.icon} size={50} color="white" />
+                </TouchableOpacity>
+                <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        <View className="mt-5 py-5 flex flex-row bg-[#FEF3E7] rounded-xl justify-between items-center" >
+          <View className="flex mt-4 px-4">
+            <Text className="text-[22px] mb-3 font-bold text-[#573926]">
+              Library
+            </Text>
             <Text
-              style={[styles.letsOpenUp, styles.letsOpenUpTypo]}
-            >{`Let’s open up to the things that matter the most `}</Text>
-            <View style={[styles.watchNow, styles.watchLayout]}>
-              <View style={[styles.watchNowChild, styles.watchLayout]} />
-              <Text style={[styles.access, styles.startTypo]}>Access</Text>
-              <Image
-                style={[styles.evaarrowBackFillIcon, styles.evaarrowIconLayout]}
-                contentFit="cover"
-                source={require("../assets/evaarrowbackfill.png")}
-              />
-            </View>
+              className="text-md mb-3 font-[12px] text-[#371B34]"
+            >
+              Let’s open up to the things that {"\n"}matter the most
+            </Text>
+
+            <TouchableOpacity
+              className="mt-4 ml-6"
+            >
+              <Text className="text-[#FE8235] font-[16px]">Access </Text>
+            </TouchableOpacity>
           </View>
           <Image
-            style={[styles.meetupIcon, styles.iconPosition]}
             contentFit="cover"
-            source={require("../assets/meetup-icon.png")}
+            className="h-50 w-50"
+            source={require("../assets/icons/ion_journal.png")}
           />
+
         </View>
-        <SelfConquerorContainer />
+
+        <View className="flex mt-9 flex-row justify-around items-center">
+          <TouchableOpacity
+            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
+          >
+            <Ionicons name="journal" size={24} color="black" />
+            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
+          >
+            <Ionicons name="journal" size={24} color="black" />
+            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
+          </TouchableOpacity>
+
+        </View>
+
+        <View className="bg-[#F8F6F6] px-8 py-5">
+          <Text className="text-[#707070] text-[14px]">“It is better to conquer yourself than to win a thousand battles”</Text>
+        </View>
+
+        {/* last container  */}
+
         <View style={[styles.rectangleGroup, styles.groupLayout]}>
           <View style={[styles.rectangle1, styles.rectangleLayout]} />
           <Image
@@ -79,12 +143,36 @@ const Home = () => {
           />
         </View>
       </ScrollView>
-      <FeelingSection />
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 30,
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#371B34',
+  },
+  scrollContainer: {
+    paddingVertical: 10,
+  },
+  feelingBox: {
+    marginRight: 24,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  feelingText: {
+    textAlign: 'center',
+    color: 'white',
+    marginTop: 5,
+    fontWeight: 'bold',
+  },
   frameScrollViewContent: {
     flexDirection: "column",
     alignItems: "center",
@@ -95,7 +183,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     height: 151,
-    width: 325,
+    width: '100%',
     position: "absolute",
   },
   maskGroupIconPosition: {
@@ -139,8 +227,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   groupLayout: {
-    height: 151,
-    width: 325,
+    height: 200,
+    width: '100%',
   },
   startClr: {
     color: Color.white,

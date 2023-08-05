@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import CardContainer from "../components/CardContainer";
 import { FontFamily, Border, Color, FontSize } from "../GlobalStyles";
-
+import SectionGreetings from "../components/SectionGreetings";
 const Library = () => {
   const navigation = useNavigation();
 
