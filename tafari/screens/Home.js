@@ -28,11 +28,11 @@ const Home = () => {
 
   return (
     <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
-      <StatusBar light className="bg-[#fbfbfb]" />
+      <StatusBar barStyle="dark-content" />
       <SectionGreetings />
 
       <ScrollView
-        className="mt-3 mx-4 mb-32"
+        className="mt-3 mx-4 mb-16"
         showsVerticalScrollIndicator={false}
       >
         {/* Greetings section */}

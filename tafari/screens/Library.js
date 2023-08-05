@@ -1,64 +1,58 @@
 import * as React from "react";
-import { StyleSheet, View, ScrollView, Pressable, Text } from "react-native";
+import { StyleSheet, View, ScrollView, StatusBar, Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import CardContainer from "../components/CardContainer";
 import { FontFamily, Border, Color, FontSize } from "../GlobalStyles";
 import SectionGreetings from "../components/SectionGreetings";
+import { getTimeOfDay } from "../utils/GetGrettings";
+import tw from "twrnc";
+import { Feather, Ionicons } from '@expo/vector-icons';
+
+
 const Library = () => {
   const navigation = useNavigation();
+  const greeting = getTimeOfDay();
 
   return (
-    <View style={styles.library}>
-      <View style={styles.shadow} />
-      <Image
-        style={styles.naviationRectangleIcon}
-        contentFit="cover"
-        source={require("../assets/naviation-rectangle.png")}
-      />
+    <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
+      <StatusBar barStyle="dark-content" />
+      <SectionGreetings />
+
       <ScrollView
-        style={styles.headerParent}
+        className="mt-3 mx-4 mb-16"
         showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.frameScrollViewContent}
       >
-        <View style={styles.header}>
-          <Pressable
-            style={styles.group}
-            onPress={() =>
-              navigation.navigate("BottomTabsRoot", { screen: "Community" })
-            }
-          >
-            <Image
-              style={styles.iconLayout}
-              contentFit="cover"
-              source={require("../assets/group.png")}
-            />
-          </Pressable>
-          <View style={[styles.ellipseParent, styles.groupChildPosition]}>
-            <Image
-              style={[styles.groupChild, styles.groupChildPosition]}
-              contentFit="cover"
-              source={require("../assets/ellipse-5.png")}
-            />
-            <Text style={[styles.text, styles.textTypo]}>3</Text>
-          </View>
-          <Image
-            style={styles.headerChild}
-            contentFit="cover"
-            source={require("../assets/ellipse-2.png")}
-          />
-        </View>
-        <CardContainer textContent="Lorem " />
+
+
+        <CardContainer
+          textContent="Self Help Videos to help you In your Journey"
+          description="text One"
+          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
+        />
+
         <View style={styles.welcomeBackSarinaWrapper}>
           <Text style={[styles.welcomeBackSarina, styles.textTypo]}>
             More Videos
           </Text>
         </View>
-        <CardContainer textContent="Lorem One" />
-        <CardContainer textContent="Lorem Two" />
-        <CardContainer textContent="Lorem Three" />
+        <CardContainer
+          textContent="Lorem One"
+          description="text One"
+          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
+        />
+        <CardContainer
+          textContent="Lorem Two"
+          description="text Two"
+          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
+          />
+        <CardContainer
+          textContent="Lorem Three"
+          description="text Three"
+          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
+        />
       </ScrollView>
+
     </View>
   );
 };
