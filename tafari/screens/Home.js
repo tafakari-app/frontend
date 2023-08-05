@@ -49,7 +49,7 @@ const Home = () => {
           <Text style={styles.heading}>How are you feeling today?</Text>
           <ScrollView
             horizontal
-            className="py-3"
+            className="py-2"
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
           >
