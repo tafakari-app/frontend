@@ -44,9 +44,8 @@ export const AuthProvider = ({ children }) => {
                 password: password,
                 re_password: re_password,
             });
-            return response.data
+            return response
         } catch (error) {
-            console.log(error)
             return error
         }
     }
@@ -64,15 +63,9 @@ export const AuthProvider = ({ children }) => {
                 token: data.access,
                 authenticated:true,
             })
-
-            // makes all the results to have the token on it
             axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-
-            // store the token in the local storage of the app
             await SecureStore.setItemAsync(TOKEN_KEY, data.access);
-
         } catch (error) {
-            console.log(error)
             return error
         }
     }

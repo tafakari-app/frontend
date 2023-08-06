@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 const Login = () => {
     const navigation = useNavigation();
     const { onLogin } = useAuth();
-
+    const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
     const validationSchema = Yup.object().shape({
@@ -33,9 +33,8 @@ const Login = () => {
     const handleLogin = async (values) => {
         const result = await onLogin(values.email, values.password);
         if (result && result.error) {
-            alert(result.error);
+            setError('Something went wrong with your login');
         }
-
     };
 
 
@@ -95,6 +94,14 @@ const Login = () => {
                                 </View>
                                 {touched.password && errors.password && (
                                     <Text style={styles.errorText}>{errors.password}</Text>
+                                )}
+                                {showError && (
+                                    <View className="flex flex-row justify-center items-center">
+                                        <Ionicons name="close-circle" size={30} color="#FF5733" />
+                                        <Text style={styles.errorText}>
+                                            {error}
+                                        </Text>
+                                    </View>
                                 )}
                                 <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
                                     <Text style={styles.loginButtonText}>Login</Text>
