@@ -1,12 +1,12 @@
 import React from "react";
 import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
-import TrendingCard from "../components/TrendingCard";
-import ContainerCardForm from "../components/ContainerCardForm";
-import WellnessHubSection from "../components/WellnessHubSection";
-import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
-import SectionGreetings from "../components/SectionGreetings";
-import SortCommunity from "../components/SortCommunity";
+import TrendingCard from "../../components/TrendingCard";
+import ContainerCardForm from "../../components/ContainerCardForm";
+import WellnessHubSection from "../../components/WellnessHubSection";
+import { Color, FontFamily, FontSize, Padding, Border } from "../../GlobalStyles";
+import SectionGreetings from "../../components/SectionGreetings";
+import SortCommunity from "../../components/SortCommunity";
 import { Ionicons } from "@expo/vector-icons";
 
 const Community = () => {
@@ -24,31 +24,32 @@ const Community = () => {
       <ScrollView
         className="mx-4 mb-16"
         showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         <TrendingCard />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
         <ContainerCardForm
           timestamp="3 hrs ago"
-          imageTimestamp={require("../assets/ellipse-22.png")}
+          imageTimestamp={require("../../assets/ellipse-22.png")}
         />
       </ScrollView>
 

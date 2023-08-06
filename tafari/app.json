@@ -1,5 +1,6 @@
 {
   "expo": {
+
     "scheme": "acme",
     "web": {
       "bundler": "metro"
@@ -8,6 +9,11 @@
     "slug": "tafari",
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    }
   }
 }
