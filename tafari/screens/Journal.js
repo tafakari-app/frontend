@@ -4,66 +4,35 @@ import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 import SectionGreetings from "../components/SectionGreetings";
+import JournalCard from '../components/JournalCard';
 
 
 const Journal = () => {
   const navigation = useNavigation();
-  return (
 
+  const messages = [
+    { date: '04 Aug', title: 'Work', content: 'Work in this team is great.' },
+    { date: '03 Aug', title: 'Summatives', content: 'I had two summatives due today but I didn\'t do either well. They\'re both incomplete ... God please' },
+    { date: '02 Aug', title: 'Laure\'s Birthday', content: 'Today is Laure\'s birthday, there were two cakes, I gave her sandals, some people came over' },
+    { date: '01 Aug', title: 'Charis', content: 'I talked to Charis today, all is well. I will go to see him on Wednesday.' },
+    { date: '31 Jul', title: 'Meeting', content: 'Had a productive team meeting today. Discussed the upcoming project milestones.' },
+    { date: '30 Jul', title: 'Exercise', content: 'Went for a 5km run in the park. Felt refreshing.' },
+    { date: '29 Jul', title: 'Movie Night', content: 'Watched a movie with family. It was a great bonding time.' },
+    // ... Add more messages as needed
+  ];
+
+  return (
     <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
       <StatusBar barStyle="dark-content" />
-
       <SectionGreetings />
-
-      <View className="mt-3 flex flex-1 justify-center mx-4 bg-[#fef3e7] rounded-lg items-center mb-16">
-        <View className="items-center">
-          <Text style={styles.coming}>Coming</Text>
-          <View style={styles.watchNow}>
-            <Text style={[styles.soon, styles.textFlexBox]}>Soon</Text>
-          </View>
-        </View>
-      </View>
-
+      <ScrollView className="mt-5 mx-4 mb-16" showsVerticalScrollIndicator={false}>
+        {messages.map((message, index) => (
+          <JournalCard key={index} date={message.date} title={message.title} content={message.content} />
+        ))}
+      </ScrollView>
     </View>
-
   );
 };
 
-
-
-
-
-const styles = StyleSheet.create({
-  textFlexBox: {
-    textAlign: "center",
-    position: "absolute",
-  },
-
-  coming: {
-    fontSize: FontSize.size_3xl,
-    fontWeight: "800",
-    fontFamily: FontFamily.epilogueExtraBold,
-    color: Color.dimgray_200,
-    textAlign: "left",
-  },
-
-  soon: {
-    marginTop: -15.5,
-    marginLeft: -73,
-    fontSize: FontSize.size_base,
-    lineHeight: 32,
-    fontWeight: "700",
-    fontFamily: FontFamily.epilogueBold,
-    color: Color.chocolate,
-    width: 146,
-    left: "50%",
-    top: "50%",
-  },
-  watchNow: {
-    marginTop: 6,
-    height: 39,
-    width: 146,
-  },
-});
 
 export default Journal;

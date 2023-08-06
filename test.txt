@@ -1,0 +1,40 @@
+import * as React from "react";
+import { StyleSheet, View, StatusBar, ScrollView } from 'react-native';
+import SectionGreetings from '../components/SectionGreetings';
+import JournalCard from '../components/JournalCard';  // Import the JournalCard component
+
+const Journal = () => {
+  const messages = [
+    { date: '04 Aug', content: 'Work in this team is great.' },
+    { date: '03 Aug', content: 'I had two summatives due today but I didn\'t do either well. They\'re both incomplete ... God please' },
+    { date: '02 Aug', content: 'Today is Laure\'s birthday, there were two cakes, I gave her sandals, some people came over' },
+    // Add more messages here
+  ];
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+      <SectionGreetings />
+      <ScrollView style={styles.scrollView}>
+        {messages.map((message, index) => (
+          <JournalCard key={index} date={message.date} content={message.content} />
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fbfbfb',
+    marginTop: -10,
+  },
+  scrollView: {
+    marginTop: 3,
+    marginHorizontal: 4,
+    marginBottom: 16,
+  },
+});
+
+export default Journal;
