@@ -2,8 +2,8 @@ import * as React from "react";
 import { StyleSheet, View, Text, StatusBar, ScrollView } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
-import SectionGreetings from "../components/SectionGreetings";
+import { Border, Color, FontSize, FontFamily } from "../../GlobalStyles";
+import SectionGreetings from "../../components/SectionGreetings";
 
 
 const Journal = () => {

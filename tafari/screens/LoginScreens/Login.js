@@ -1,9 +1,12 @@
 import { View, Text, KeyboardAvoidingView, StatusBar, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { FontFamily, FontSize, Padding, Border } from '../GlobalStyles'
+import { FontFamily, FontSize, Padding, Border } from '../../GlobalStyles'
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
+    const navigation = useNavigation();
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -17,6 +20,10 @@ const Login = () => {
     const handleLogin = () => {
 
     };
+
+    const handleSignup = () => {
+        navigation.push('Register');
+    }
 
     return (
         <View className="flex flex-1 bg-[#f3eff4]">
@@ -75,7 +82,10 @@ const Login = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={styles.signUpButton}>
+                    <TouchableOpacity
+                        onPress={handleSignup}
+                        style={styles.signUpButton}
+                    >
                         <Text style={styles.signUpButtonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>

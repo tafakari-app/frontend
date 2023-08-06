@@ -1,8 +1,8 @@
 import * as React from "react";
-import Home from "../screens/Home";
-import Journal from "../screens/Journal";
-import Community from "../screens/Community";
-import Library from "../screens/Library";
+import Home from "../screens/AppScreens/Home";
+import Journal from "../screens/AppScreens/Journal";
+import Community from "../screens/AppScreens/Community";
+import Library from "../screens/AppScreens/Library";
 
 import HomeButtonActive from "../components/HomeButtonActive";
 import HomeButton from "../components/HomeButton";

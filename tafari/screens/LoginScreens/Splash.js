@@ -1,13 +1,26 @@
 import React from 'react';
 import { View, Text, StyleSheet, StatusBar, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const Splash = () => {
+  const navigation = useNavigation();
+
+  const handleLogin = () => {
+    console.log('Login')
+  }
+  const handleRegister = () => {
+    navigation.push('Register')
+  }
+
+
   return (
     <View className="flex flex-1 bg-[#FE8235]">
       <StatusBar hidden />
       <View className="mx-3 items-center justify-center bg-[#fffee8] h-[50%] mt-3 rounded-3xl">
         <Image
-          source={require('../assets/icons/care.jpg')}
+          source={require('../../assets/icons/care.jpg')}
           style={{ width: 300, height: 300 }}
         />
       </View>
@@ -25,6 +38,7 @@ const Splash = () => {
 
       <View className="flex flex-row  bg-[#e8e6ef] mx-16 justify-center overflow-hidden mt-16 rounded-xl">
         <TouchableOpacity
+          onPress={handleLogin}
           style={styles.button}
           className="bg-[#ffffff] w-full rounded-xl"
         >
@@ -32,8 +46,9 @@ const Splash = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-        className="  w-full rounded-xl"
+          className="  w-full rounded-xl"
           style={styles.button}
+          onPress={handleRegister}
         >
           <Text style={styles.text}>Register</Text>
         </TouchableOpacity>

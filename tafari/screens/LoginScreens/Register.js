@@ -1,10 +1,12 @@
 import { View, Text, KeyboardAvoidingView, StatusBar, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { FontFamily, FontSize, Padding, Border } from '../GlobalStyles';
+import { FontFamily, FontSize, Padding, Border } from '../../GlobalStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Register = () => {
+  const navigation = useNavigation();
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
@@ -31,6 +33,10 @@ const Register = () => {
     // if the register was successful
     setShowSuccess(true);
   };
+
+  const handleLogin = () => {
+    navigation.push('Login');
+  }
 
 
   useEffect(() => {
@@ -119,7 +125,7 @@ const Register = () => {
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account?</Text>
             <TouchableOpacity
-
+              onPress={handleLogin}
             >
               <Text style={styles.loginLink}>Log In</Text>
             </TouchableOpacity>

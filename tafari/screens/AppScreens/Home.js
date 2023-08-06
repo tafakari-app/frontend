@@ -1,12 +1,12 @@
 import * as React from "react";
 import { StyleSheet, View, ScrollView, StatusBar, TouchableOpacity, Text } from "react-native";
 import { Image } from "expo-image";
-import SelfConquerorContainer from "../components/SelfConquerorContainer";
-import FeelingSection from "../components/FeelingSection";
-import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-import SectionGreetings from "../components/SectionGreetings";
+import SelfConquerorContainer from "../../components/SelfConquerorContainer";
+import FeelingSection from "../../components/FeelingSection";
+import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
+import SectionGreetings from "../../components/SectionGreetings";
 import tw from "twrnc";
-import { getTimeOfDay } from "../utils/GetGrettings";
+import { getTimeOfDay } from "../../utils/GetGrettings";
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 
@@ -84,7 +84,7 @@ const Home = () => {
           <Image
             contentFit="cover"
             className="h-50 w-50"
-            source={require("../assets/icons/ion_journal.png")}
+            source={require("../../assets/icons/ion_journal.png")}
           />
 
         </View>
@@ -116,7 +116,7 @@ const Home = () => {
           <Image
             style={[styles.maskGroupIcon, styles.maskGroupIconPosition]}
             contentFit="cover"
-            source={require("../assets/mask-group2.png")}
+            source={require("../../assets/mask-group2.png")}
           />
           <View style={styles.peerGroupMeetup}>
             <Text style={[styles.journal, styles.startClr]}>Journal</Text>
@@ -132,14 +132,14 @@ const Home = () => {
                   styles.evaarrowIconLayout,
                 ]}
                 contentFit="cover"
-                source={require("../assets/evaarrowbackfill-white.png")}
+                source={require("../../assets/evaarrowbackfill-white.png")}
               />
             </View>
           </View>
           <Image
             style={[styles.meditationIcon, styles.iconPosition]}
             contentFit="cover"
-            source={require("../assets/meditation-icon.png")}
+            source={require("../../assets/meditation-icon.png")}
           />
         </View>
       </ScrollView>

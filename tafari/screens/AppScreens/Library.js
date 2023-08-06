@@ -2,10 +2,10 @@ import * as React from "react";
 import { StyleSheet, View, ScrollView, StatusBar, Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
-import CardContainer from "../components/CardContainer";
-import { FontFamily, Border, Color, FontSize } from "../GlobalStyles";
-import SectionGreetings from "../components/SectionGreetings";
-import { getTimeOfDay } from "../utils/GetGrettings";
+import CardContainer from "../../components/CardContainer";
+import { FontFamily, Border, Color, FontSize } from "../../GlobalStyles";
+import SectionGreetings from "../../components/SectionGreetings";
+import { getTimeOfDay } from "../../utils/GetGrettings";
 import tw from "twrnc";
 import { Feather, Ionicons } from '@expo/vector-icons';
 
