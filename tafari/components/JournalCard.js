@@ -8,7 +8,7 @@ const JournalCard = ({ date, title, content }) => {
         <View style={styles.card}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.date}>{date}</Text>
-            <Text style={styles.content}>{content}</Text>
+            <Text style={styles.content} numberOfLines={2}>{content}</Text>
         </View>
     );
 };

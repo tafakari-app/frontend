@@ -1,10 +1,11 @@
 import * as React from "react";
-import { StyleSheet, View, Text, StatusBar, ScrollView } from "react-native";
+import { StyleSheet, View, Text, StatusBar, ScrollView, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 import SectionGreetings from "../components/SectionGreetings";
 import JournalCard from '../components/JournalCard';
+import { Ionicons } from '@expo/vector-icons';
 
 
 const Journal = () => {
@@ -22,7 +23,7 @@ const Journal = () => {
   ];
 
   return (
-    <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
+    <View style={styles.container} className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
       <StatusBar barStyle="dark-content" />
       <SectionGreetings />
       <ScrollView className="mt-5 mx-4 mb-16" showsVerticalScrollIndicator={false}>
@@ -30,9 +31,31 @@ const Journal = () => {
           <JournalCard key={index} date={message.date} title={message.title} content={message.content} />
         ))}
       </ScrollView>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate('AddJournalEntry')}
+      >
+        <Ionicons name="add" size={30} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  fab: {
+    position: "absolute",
+    bottom: 70,
+    right: 20,
+    backgroundColor: "#FE8235",
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 4,
+  },
+});
+
 
 
 export default Journal;
