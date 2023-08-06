@@ -23,7 +23,7 @@ const AppNavigation = () => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            setHideSplashScreen(true);
+            setHideSplashScreen(false);
         }, 1000);
     }, []);
 

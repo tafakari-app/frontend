@@ -53,3 +53,11 @@ export const FontFamily = {
     br_4xs: 9,
     br_base: 16,
   };
+
+  export default Cpalete = {
+    main: "#FE8235",
+    primary: "#650000",
+    secondary: "#006E5E",
+    abstract : "#DFE0DF"
+  }
+

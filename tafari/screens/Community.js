@@ -24,6 +24,7 @@ const Community = () => {
       <ScrollView
         className="mx-4 mb-16"
         showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         <TrendingCard />
         <ContainerCardForm
