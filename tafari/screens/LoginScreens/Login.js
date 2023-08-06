@@ -12,6 +12,7 @@ const Login = () => {
     const navigation = useNavigation();
     const { onLogin } = useAuth();
     const [error, setError] = useState('');
+    const [showError, setShowError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const validationSchema = Yup.object().shape({

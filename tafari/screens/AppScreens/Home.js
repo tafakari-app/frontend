@@ -8,11 +8,20 @@ import SectionGreetings from "../../components/SectionGreetings";
 import tw from "twrnc";
 import { getTimeOfDay } from "../../utils/GetGrettings";
 import { Feather, Ionicons } from '@expo/vector-icons';
-
-
+import { useState,useEffect } from "react";
+import axios from 'axios';
+import { API_URL } from "../../app/context/AuthContext";
 
 
 const Home = () => {
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await axios.get(`${API_URL}users/users/me/`);
+      console.log(user)
+    }
+    getUser();
+  }, []);
+
   const feelings = [
     { name: 'Happy', icon: 'smile', color: '#FFC107' },
     { name: 'Sad', icon: 'frown', color: '#2196F3' },

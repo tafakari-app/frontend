@@ -4,13 +4,16 @@ import tw from 'twrnc';
 import { FontFamily, FontSize, Color } from "../GlobalStyles";
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-
+import { useAuth } from '../app/context/AuthContext';
 
 const SectionGreetings = () => {
+    const { onLogout } = useAuth();
+
     const navigation = useNavigation();
     const [notificationCount, setNotificationCount] = useState(1);
     const handlePress = () => {
         setNotificationCount(0);
+        onLogout();
     };
     return (
         <View className="mt-14">
