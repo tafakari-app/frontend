@@ -5,8 +5,8 @@ import { useFonts } from "expo-font";
 import Splash from "../screens/Splash";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
-
-
+import Login from '../screens/Login';
+import Register from '../screens/Register';
 
 const AppNavigation = () => {
     const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
@@ -51,7 +51,7 @@ const AppNavigation = () => {
                         </Stack.Navigator>
                     </NavigationContainer>
                 ) : (
-                    <Splash />
+                    <Register />
                 )
             }
         </>
