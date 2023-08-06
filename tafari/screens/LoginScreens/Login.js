@@ -3,23 +3,41 @@ import React, { useState } from 'react'
 import { FontFamily, FontSize, Padding, Border } from '../../GlobalStyles'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../app/context/AuthContext';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 
 const Login = () => {
     const navigation = useNavigation();
+    const { onLogin } = useAuth();
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
     const [showPassword, setShowPassword] = useState(false);
+
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email address').required('Email is required'),
+        password: Yup.string()
+            .min(8, 'Password must be at least 8 characters')
+            .max(20, 'Password must not exceed 20 characters')
+            .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+            )
+            .required('Password is required'),
+    });
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-    const handleLogin = () => {
+    const handleLogin = async (values) => {
+        const result = await onLogin(values.email, values.password);
+        if (result && result.error) {
+            alert(result.error);
+        }
 
     };
+
 
     const handleSignup = () => {
         navigation.push('Register');
@@ -41,36 +59,49 @@ const Login = () => {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="space-y-3"
                 >
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Email"
-                        value={formData.email}
-                        onChangeText={text => setFormData({ ...formData, email: text })}
-                    />
-                    <View style={styles.passwordInput}>
-                        <TextInput
-                            style={styles.passwordTextInput}
-                            placeholder="Enter Password"
-                            secureTextEntry={!showPassword}
-                            value={formData.password}
-                            onChangeText={text => setFormData({ ...formData, password: text })}
-                        />
-                        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordIcon}>
-                            <Ionicons
-                                name={showPassword ? 'eye-off' : 'eye'}
-                                size={24}
-                                color={showPassword ? '#888' : '#000'}
-                            />
-                        </TouchableOpacity>
-                    </View>
-
-                    <TouchableOpacity
-                        style={styles.loginButton}
-                        onPress={handleLogin}
-
+                    <Formik
+                        initialValues={{ email: '', password: '' }}
+                        validationSchema={validationSchema}
+                        onSubmit={handleLogin}
                     >
-                        <Text style={styles.loginButtonText}>Login</Text>
-                    </TouchableOpacity>
+                        {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
+                            <>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter Email"
+                                    onChangeText={handleChange('email')}
+                                    onBlur={handleBlur('email')}
+                                    value={values.email}
+                                />
+                                {touched.email && errors.email && (
+                                    <Text style={styles.errorText}>{errors.email}</Text>
+                                )}
+                                <View style={styles.passwordInput}>
+                                    <TextInput
+                                        style={styles.passwordTextInput}
+                                        placeholder="Enter Password"
+                                        secureTextEntry={!showPassword}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        value={values.password}
+                                    />
+                                    <TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordIcon}>
+                                        <Ionicons
+                                            name={showPassword ? 'eye-off' : 'eye'}
+                                            size={24}
+                                            color={showPassword ? '#888' : '#000'}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                {touched.password && errors.password && (
+                                    <Text style={styles.errorText}>{errors.password}</Text>
+                                )}
+                                <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                                    <Text style={styles.loginButtonText}>Login</Text>
+                                </TouchableOpacity>
+                            </>
+                        )}
+                    </Formik>
 
                     <View style={styles.forgotPasswordContainer}>
                         <TouchableOpacity>
@@ -160,6 +191,12 @@ const styles = StyleSheet.create({
         color: '#FE8235',
         fontSize: FontSize.medium,
         fontFamily: FontFamily.epilogueBold,
+    },
+    errorText: {
+        color: 'red',
+        fontFamily: FontFamily.epilogueRegular,
+        fontSize: FontSize.small,
+        marginTop: 5,
     },
 });
 

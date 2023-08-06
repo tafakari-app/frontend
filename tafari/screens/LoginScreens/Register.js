@@ -1,18 +1,17 @@
-import { View, Text, KeyboardAvoidingView, StatusBar, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, KeyboardAvoidingView, StatusBar, Platform, StyleSheet, TextInput,ScrollView, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { FontFamily, FontSize, Padding, Border } from '../../GlobalStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
+import { useAuth } from '../../app/context/AuthContext';
 
 const Register = () => {
   const navigation = useNavigation();
-  const [formData, setFormData] = useState({
-    fullname: '',
-    email: '',
-    password: '',
-    re_password: '',
-  });
+  const { onRegister } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showRe_password, setShowRe_password] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -27,9 +26,9 @@ const Register = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleRegister = () => {
+  const handleRegister = (values) => {
 
-
+    console.log(values)
     // if the register was successful
     setShowSuccess(true);
   };
@@ -39,11 +38,28 @@ const Register = () => {
   }
 
 
+  const validationSchema = Yup.object().shape({
+    fullname: Yup.string().required('Full Name is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      )
+      .required('Password is required'),
+    re_password: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
+
+
   useEffect(() => {
     if (showSuccess) {
       // After 3 seconds, hide the success message
       const timer = setTimeout(() => {
         setShowSuccess(false);
+        
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -52,7 +68,7 @@ const Register = () => {
 
 
   return (
-    <View className="flex flex-1 bg-[#f3eff4]">
+    <ScrollView className="flex flex-1 bg-[#f3eff4]">
       <StatusBar hidden />
       <View className="mx-3 items-center justify-center mt-24">
         <Text style={styles.Heading} className="font-semibold text-center text-4xl">
@@ -67,54 +83,82 @@ const Register = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           className="space-y-6"
         >
-          <TextInput
-            style={styles.input}
-            placeholder="Full Name"
-            value={formData.fullname}
-            onChangeText={(text) => setFormData({ ...formData, fullname: text })}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={formData.email}
-            onChangeText={(text) => setFormData({ ...formData, email: text })}
-          />
-          <View style={styles.passwordInput}>
-            <TextInput
-              style={styles.passwordTextInput}
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              value={formData.password}
-              onChangeText={(text) => setFormData({ ...formData, password: text })}
-            />
-            <TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordIcon}>
-              <Ionicons
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={24}
-                color={showPassword ? '#888' : '#000'}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.passwordInput}>
-          <TextInput
-              style={styles.passwordTextInput}
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              value={formData.re_password}
-              onChangeText={(text) => setFormData({ ...formData, re_password: text })}
-            />
-          <TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordIcon}>
-              <Ionicons
-                name={showRe_password ? 'eye-off' : 'eye'}
-                size={24}
-                color={showRe_password ? '#888' : '#000'}
-              />
-            </TouchableOpacity>
-          </View>
+          <Formik
+            initialValues={{ fullname: '', email: '', password: '', re_password: '' }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => handleRegister(values)}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
+              <>
+                <TextInput
+                  style={styles.input}
 
-          <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-            <Text style={styles.registerButtonText}>Register</Text>
-          </TouchableOpacity>
+                  placeholder="Full Name"
+                  onChangeText={handleChange('fullname')}
+                  onBlur={handleBlur('fullname')}
+                  value={values.fullname}
+                  className="mb-3"
+                />
+                {touched.fullname && errors.fullname && (
+                  <Text style={styles.errorText}>{errors.fullname}</Text>
+                )}
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+                {touched.email && errors.email && (
+                  <Text style={styles.errorText}>{errors.email}</Text>
+                )}
+                <View style={styles.passwordInput}>
+                  <TextInput
+                    style={styles.passwordTextInput}
+                    placeholder="Password"
+                    secureTextEntry={!showPassword}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
+                  />
+                  <TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordIcon}>
+                    <Ionicons
+                      name={showPassword ? 'eye-off' : 'eye'}
+                      size={24}
+                      color={showPassword ? '#888' : '#000'}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {touched.password && errors.password && (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                )}
+                <View style={styles.passwordInput}>
+                  <TextInput
+                    style={styles.passwordTextInput}
+                    placeholder="Confirm Password"
+                    secureTextEntry={!showRe_password}
+                    onChangeText={handleChange('re_password')}
+                    onBlur={handleBlur('re_password')}
+                    value={values.re_password}
+                  />
+                  <TouchableOpacity onPress={toggleRe_PasswordVisibility} style={styles.passwordIcon}>
+                    <Ionicons
+                      name={showRe_password ? 'eye-off' : 'eye'}
+                      size={24}
+                      color={showRe_password ? '#888' : '#000'}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {touched.re_password && errors.re_password && (
+                  <Text style={styles.errorText}>{errors.re_password}</Text>
+                )}
+
+                <TouchableOpacity style={styles.registerButton} onPress={handleSubmit}>
+                  <Text style={styles.registerButtonText}>Register</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </Formik>
           {showSuccess && (
             <View style={styles.successMessage}>
               <Ionicons name="checkmark-circle" size={30} color="#4CAF50" />
@@ -132,7 +176,7 @@ const Register = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -158,7 +202,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 9,
     paddingHorizontal: 15,
-    paddingVertical:12
+    paddingVertical: 12
   },
   passwordTextInput: {
     flex: 1,
@@ -205,6 +249,12 @@ const styles = StyleSheet.create({
     fontSize: FontSize.medium,
     fontFamily: FontFamily.epilogueMedium,
     marginLeft: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: FontSize.small,
+    fontFamily: FontFamily.epilogueRegular,
+    marginTop: 5,
   },
 });
 

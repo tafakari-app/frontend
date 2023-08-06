@@ -9,6 +9,7 @@ const Splash = () => {
 
   const handleLogin = () => {
     console.log('Login')
+    navigation.push('Login')
   }
   const handleRegister = () => {
     navigation.push('Register')
