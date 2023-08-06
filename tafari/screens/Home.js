@@ -34,7 +34,6 @@ const Home = () => {
       <ScrollView
         className="mt-3 mx-4 mb-16"
         showsVerticalScrollIndicator={false}
->>>>>>> 7af4465ff06f417e1709174a85cd3c98fd1395bf:tafari/screens/Home.js
       >
         {/* Greetings section */}
         <View className="flex mt-3 flex-row mb-3">
