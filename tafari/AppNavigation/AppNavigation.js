@@ -1,4 +1,7 @@
 import AppBottomTabs from './AppBottomTabs';
+import AddJournalEntry from "../screens/AppScreens/AddJournalEntry";
+import MySwiper from './MySwiper';
+import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -21,19 +24,42 @@ const AppNavigation = () => {
 
 
     return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="AppBottomTabs"
-                component={AppBottomTabs}
-                options={{
-                    headerShown: false,
-                    presentation: "fullScreenModal",
-                    animation: "default"
-                }}
-            />
-        </Stack.Navigator>
+        <NavigationContainer independent={true}>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="AppBottomTabs"
+                    component={AppBottomTabs}
+                    options={{
+                        headerShown: false,
+                        presentation: "fullScreenModal",
+                        animation: "default"
+                    }}
+                />
+
+
+                <Stack.Screen
+                    name="AddJournalEntry"
+                    component={AddJournalEntry}
+                    options={{
+                        headerShown: false,
+                        presentation: "fullScreenModal",
+                        animation: "default"
+                    }}
+                />
+
+                <Stack.Screen
+                    name="MySwiper"
+                    component={MySwiper}
+                    options={{
+                        headerShown: false,
+                        presentation: "fullScreenModal",
+                        animation: "default"
+                    }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 };
 
 
-export default AppNavigation
+export default AppNavigation;
