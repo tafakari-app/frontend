@@ -5,20 +5,67 @@ import SelfConquerorContainer from "../../components/SelfConquerorContainer";
 import FeelingSection from "../../components/FeelingSection";
 import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
-import tw from "twrnc";
 import { getTimeOfDay } from "../../utils/GetGrettings";
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
 import { API_URL } from "../../app/context/AuthContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const Home = () => {
+  const [canClick, setCanClick] = useState(true);
+  const [lastClickedDate, setLastClickedDate] = useState(null);
+  const [visibleFeelings, setVisibleFeelings] = useState(feelings);
+
+
+  const checkCanClick = async () => {
+    try {
+      const lastDate = await AsyncStorage.getItem('@LastClickedDate');
+      if (lastDate) {
+        const today = new Date().toDateString();
+        if (lastDate === today) {
+          setCanClick(false); // User has already clicked today
+        } else {
+          setCanClick(true); // User can click because it's a new day
+        }
+      }
+    } catch (error) {
+      console.error('Error reading data from AsyncStorage:', error);
+    }
+  };
+
+  const handleFeelingClick = async (index) => {
+    if (canClick) {
+      // Handle the click action here (e.g., registering the feeling)
+
+      // Store the current date in AsyncStorage to track the last click
+      try {
+        const today = new Date().toDateString();
+        await AsyncStorage.setItem('@LastClickedDate', today);
+        setLastClickedDate(today);
+        setCanClick(false);
+
+        // Remove the clicked feeling from the visibleFeelings array
+        const newVisibleFeelings = [...visibleFeelings];
+        newVisibleFeelings.splice(index, 1);
+        setVisibleFeelings(newVisibleFeelings);
+      } catch (error) {
+        console.error('Error storing data in AsyncStorage:', error);
+      }
+    }
+  };
+
+
+
+  const [userName, setUserName] = useState();
   useEffect(() => {
     const getUser = async () => {
       const user = await axios.get(`${API_URL}users/users/me/`);
-      console.log(user)
+      setUserName(user.data.fullname);
     }
+    checkCanClick();
     getUser();
   }, []);
 
@@ -48,7 +95,7 @@ const Home = () => {
         <View className="flex mt-3 flex-row mb-3">
           <Text className="text-2xl font-bold text-[#371B34]">
             <Text className="font-medium">{greeting}, </Text> {'\n'}
-            Brian!
+            {userName?.slice(0, 8)}!
           </Text>
         </View>
 
@@ -58,13 +105,17 @@ const Home = () => {
           <Text style={styles.heading}>How are you feeling today?</Text>
           <ScrollView
             horizontal
-            className="py-2"
-            showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
           >
-            {feelings.map((feeling, index) => (
+            {visibleFeelings?.map((feeling, index) => (
               <View key={index} className="flex align-middle">
-                <TouchableOpacity key={index} style={[styles.feelingBox, { backgroundColor: feeling.color }]}>
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.feelingBox, { backgroundColor: feeling.color }]}
+                  disabled={!canClick}
+                  onPress={() => handleFeelingClick(index)}
+                >
                   <Feather name={feeling.icon} size={50} color="white" />
                 </TouchableOpacity>
                 <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
