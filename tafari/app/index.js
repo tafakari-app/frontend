@@ -21,7 +21,7 @@ export const Layout = () => {
         AuthState.authenticated ? (
           <AppNavigation />
         ) : (
-          <AppNavigation />
+          <AppAuthScreens />
         )
       }
     </NavigationContainer>
