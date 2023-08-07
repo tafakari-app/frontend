@@ -13,7 +13,7 @@ export default function Page() {
 }
 
 export const Layout = () => {
-  const {AuthState, onLogin, onRegister, onLogout} = useAuth();
+  const { AuthState, onLogin, onRegister, onLogout } = useAuth();
 
   return (
     <NavigationContainer independent={true}>
@@ -21,7 +21,7 @@ export const Layout = () => {
         AuthState.authenticated ? (
           <AppNavigation />
         ) : (
-          <AppAuthScreens />
+          <AppNavigation />
         )
       }
     </NavigationContainer>

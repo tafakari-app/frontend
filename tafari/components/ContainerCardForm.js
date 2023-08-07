@@ -1,18 +1,54 @@
-import * as React from "react";
-import { StyleSheet, View, Text, ImageSourcePropType } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Text, ImageSourcePropType, TouchableOpacity, TextInput, Button } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
-const ContainerCardForm = ({ timestamp, imageTimestamp }) => {
+const ContainerCardForm = ({ author = 'Pigeon Car',
+  timestamp,
+  content = 'Default content here',
+  imageTimestamp,
+  commentsCount = 0, likes }) => {
+  // likes
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(likes);
+
+  // comments
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [commentCount, setCommentCount] = useState(commentsCount);
+
+
+  const handleLike = () => {
+    if (isLiked) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
+    setIsLiked(!isLiked);
+  };
+
+  const handlePostComments = () => {
+    console.log("Comment posted:", comments);
+    if (newComment.trim() !== '') {
+      setComments(prevComments => [...prevComments, newComment]);
+      setCommentCount(prevCount => prevCount + 1);
+    }
+    // TODO: Add your logic to handle the comment (e.g., update state, send to server)
+
+    // Clear the comment input after posting
+    setNewComment('');
+  };
+
   return (
     <View style={styles.rectangleParent}>
       <View style={styles.rectangle} />
       <View style={styles.pigeonCarParent}>
-        <Text style={styles.pigeonCar}>Pigeon Car</Text>
+        <Text style={styles.pigeonCar}>{author}</Text>
         <Text style={styles.hrsAgo}>{timestamp}</Text>
         <Text
           style={styles.isThereA}
-        >{`Is there a therapy which can cure crossdressing & bdsm compulsion?`}</Text>
+        >{content}</Text>
         <Image
           style={styles.groupChild}
           contentFit="cover"
@@ -21,21 +57,25 @@ const ContainerCardForm = ({ timestamp, imageTimestamp }) => {
       </View>
       <View style={[styles.groupParent, styles.parentLayout]}>
         <View style={[styles.wrapper, styles.parentLayout]}>
-          <Text style={[styles.text, styles.textTypo]}>2</Text>
+          <Text style={[styles.text, styles.textTypo]}>{commentCount}</Text>
         </View>
-        <Image
-          style={styles.akarIconscomment}
-          contentFit="cover"
-          source={require("../assets/comment-icon.png")}
-        />
+        <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+          <Image
+            style={styles.akarIconscomment}
+            contentFit="cover"
+            source={require('../assets/comment-icon.png')}
+          />
+        </TouchableOpacity>
       </View>
       <View style={[styles.parent, styles.parentLayout]}>
-        <Text style={[styles.text1, styles.textTypo]}>12</Text>
-        <Image
-          style={[styles.antDesignlikeOutlinedIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/like-button.png")}
-        />
+        <Text style={[styles.text1, styles.textTypo]}>{likeCount}</Text>
+        <TouchableOpacity onPress={handleLike}>
+          <Image
+            style={[styles.antDesignlikeOutlinedIcon, styles.iconLayout]}
+            contentFit="cover"
+            source={isLiked ? require('../assets/like-button-active.png') : require('../assets/like-button.png')}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.groupItem} />
       <Image
@@ -43,6 +83,27 @@ const ContainerCardForm = ({ timestamp, imageTimestamp }) => {
         contentFit="cover"
         source={require("../assets/share-icon.png")}
       />
+      {showComments && (
+        <View style={styles.commentSection}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setShowComments(false)}>
+            <Text style={{ fontWeight: 'bold' }}>X</Text>
+          </TouchableOpacity>
+          {comments.map((comment, index) => (
+            <Text key={index} style={styles.commentText}>{comment}</Text>
+          ))}
+          <View style={styles.commentInputWrapper}>
+            <TextInput
+              style={styles.commentInput}
+              placeholder="Write a comment..."
+              value={newComment}
+              onChangeText={setNewComment}
+            />
+            <TouchableOpacity style={styles.postButton} onPress={handlePostComments}>
+              <Text>Post</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -172,6 +233,48 @@ const styles = StyleSheet.create({
     height: 110,
     marginTop: 16,
     width: 325,
+  },
+  commentInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 1,
+    left: 5,
+
+  },
+  commentSection: {
+    padding: 10,
+    backgroundColor: 'linen',
+    width: '100%',
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+  },
+  postButton: {
+    padding: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  commentText: {
+    marginBottom: 5,
+    fontSize: 14,
+    color: '#333',
+    marginLeft: 10,
+  },
+  commentInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
 });
 
