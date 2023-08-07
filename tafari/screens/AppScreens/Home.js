@@ -8,11 +8,12 @@ import SectionGreetings from "../../components/SectionGreetings";
 import tw from "twrnc";
 import { getTimeOfDay } from "../../utils/GetGrettings";
 import { Feather, Ionicons } from '@expo/vector-icons';
-
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const Home = () => {
+  const navigation = useNavigation();
   const feelings = [
     { name: 'Happy', icon: 'smile', color: '#FFC107' },
     { name: 'Sad', icon: 'frown', color: '#2196F3' },
@@ -77,6 +78,7 @@ const Home = () => {
 
             <TouchableOpacity
               className="mt-4 ml-6"
+              onPress={() => navigation.navigate('Library')}
             >
               <Text className="text-[#FE8235] font-[16px]">Access </Text>
             </TouchableOpacity>
@@ -86,22 +88,6 @@ const Home = () => {
             className="h-50 w-50"
             source={require("../../assets/icons/ion_journal.png")}
           />
-
-        </View>
-
-        <View className="flex mt-9 flex-row justify-around items-center">
-          <TouchableOpacity
-            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
-          >
-            <Ionicons name="journal" size={24} color="black" />
-            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
-          >
-            <Ionicons name="journal" size={24} color="black" />
-            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
-          </TouchableOpacity>
 
         </View>
 
@@ -123,18 +109,23 @@ const Home = () => {
             <Text style={[styles.getBackChat, styles.startClr]}>
               Get back chat access and session credits
             </Text>
-            <View style={[styles.watchNow, styles.watchLayout]}>
-              <View style={[styles.watchNowChild, styles.watchLayout]} />
-              <Text style={[styles.start, styles.startClr]}>Start</Text>
-              <Image
-                style={[
-                  styles.evaarrowBackFillIcon1,
-                  styles.evaarrowIconLayout,
-                ]}
-                contentFit="cover"
-                source={require("../../assets/evaarrowbackfill-white.png")}
-              />
-            </View>
+            <TouchableOpacity
+              style={[styles.watchNow, styles.watchLayout]}
+              onPress={() => navigation.navigate('Journal')}
+            >
+              <View style={[styles.watchNow, styles.watchLayout]}>
+                <View style={[styles.watchNowChild, styles.watchLayout]} />
+                <Text style={[styles.start, styles.startClr]}>Start</Text>
+                <Image
+                  style={[
+                    styles.evaarrowBackFillIcon1,
+                    styles.evaarrowIconLayout,
+                  ]}
+                  contentFit="cover"
+                  source={require("../../assets/evaarrowbackfill-white.png")}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <Image
             style={[styles.meditationIcon, styles.iconPosition]}
