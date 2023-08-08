@@ -1,4 +1,7 @@
 import AppBottomTabs from './AppBottomTabs';
+import AddJournalEntry from "../screens/AppScreens/AddJournalEntry";
+import MySwiper from './MySwiper';
+import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -42,9 +45,20 @@ const AppNavigation = () => {
                     animation: "default"
                 }}
             />
+        
+            <Stack.Screen
+                name="MySwiper"
+                component={MySwiper}
+                options={{
+                    headerShown: false,
+                    presentation: "fullScreenModal",
+                    animation: "default"
+                }}
+            />
+
         </Stack.Navigator>
     );
 };
 
 
-export default AppNavigation
+export default AppNavigation;

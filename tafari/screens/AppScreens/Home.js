@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 
+
 const Home = () => {
   const [canClick, setCanClick] = useState(true);
   const [lastClickedDate, setLastClickedDate] = useState(null);
@@ -147,7 +148,7 @@ const Home = () => {
             <TouchableOpacity
               className="mt-4 ml-1 flex flex-row items-center"
               onPress={() => navigation.navigate("Library")}
-            >
+
               <Text className="text-[#FE8235] font-bold">Access </Text>
               <MaterialCommunityIcons name="arrow-right" size={24} color="#FE8235" />
 
@@ -197,7 +198,7 @@ const Home = () => {
             <Text style={[styles.getBackChat, styles.startClr]}>
               Get back chat access and session credits
             </Text>
-            <View style={[styles.watchNow, styles.watchLayout]}>
+<View style={[styles.watchNow, styles.watchLayout]}>
               <View style={[styles.watchNowChild, styles.watchLayout]} />
               <Text onPress={() => navigation.navigate("Journal")} style={[styles.start, styles.startClr]}>Start</Text>
               <Image
@@ -210,6 +211,7 @@ const Home = () => {
                 source={require("../../assets/evaarrowbackfill-white.png")}
               />
             </View>
+
           </View>
           <Image
             style={[styles.meditationIcon, styles.iconPosition]}
