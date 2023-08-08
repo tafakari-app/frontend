@@ -8,11 +8,13 @@ import { useEffect, useState } from 'react';
 import { API_URL } from "../../app/context/AuthContext";
 import axios from 'axios';
 import ListLibraryVideos from "../../components/listLibraryVideos";
+import { useNavigation,useIsFocused } from "@react-navigation/native";
 
 
 const Library = () => {
   const [videos, setVideos] = useState([])
   const [error, setError] = useState(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const getAllVideos = async () => {
@@ -25,7 +27,7 @@ const Library = () => {
       }
     }
     getAllVideos();
-  }, [])
+  }, [isFocused])
 
   const renderVideoCard = ({ item }) => (
     <ListLibraryVideos video={item} />

@@ -16,7 +16,7 @@ const SectionGreetings = () => {
         onLogout();
     };
     return (
-        <View className="mt-14">
+        <View className="mt-14 shadow-md ">
             <View className="flex flex-row justify-between mx-4 items-center">
                 <Image
                     className="w-16 h-16 rounded-full"
@@ -26,18 +26,7 @@ const SectionGreetings = () => {
                 <TouchableOpacity
                     onPress={handlePress}
                 >
-                    <Feather name="bell" size={40} color="black" />
-                    {notificationCount > 0 && (
-                        <View
-                            style={styles.notify}
-                        >
-                            <Text
-                                style={styles.notifyText}
-                            >
-                                {notificationCount}
-                            </Text>
-                        </View>
-                    )}
+                    <Feather name="log-out" size={40} color="black" />
                 </TouchableOpacity>
 
             </View>
@@ -62,6 +51,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
     }
+
 })
 
 

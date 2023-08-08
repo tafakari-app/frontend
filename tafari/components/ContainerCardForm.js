@@ -1,100 +1,123 @@
 import * as React from "react";
-import { StyleSheet, View, Text, ImageSourcePropType } from "react-native";
+import { StyleSheet, View, Text, ImageSourcePropType, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from "axios";
+import { API_URL } from "../app/context/AuthContext";
+import { useState } from "react";
 
-const ContainerCardForm = ({ timestamp, imageTimestamp }) => {
+const ContainerCardForm = ({ ID, author, timestamp, imageTimestamp, description, likes, comments }) => {
+  const isoDateString = timestamp;
+  const postDate = new Date(isoDateString);
+  const currentDate = new Date();
+  const timeDifference = currentDate - postDate;
+  const [isLiked, setIsLiked] = useState(false);
+
+
+  let humanReadableDate;
+
+  if (timeDifference < 1000 * 60 * 60) { // Less than an hour
+    const minutes = Math.floor(timeDifference / (1000 * 60));
+    humanReadableDate = `${minutes}m`;
+  } else if (timeDifference < 1000 * 60 * 60 * 24) { // Less than a day
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    humanReadableDate = `${hours}h`;
+  } else if (timeDifference < 1000 * 60 * 60 * 24 * 30) { // Less than a month
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    humanReadableDate = `${days}d`;
+  } else {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    humanReadableDate = postDate.toLocaleDateString('en-US', options);
+  }
+
+  const handLikeButton = async () => {
+    try {
+      const response = await axios.post(`${API_URL}community/like-post/${ID}/`);
+      if (response.status === 200 ){
+        setIsLiked(true);
+      }
+    } catch (error) {
+      alert("Error: " + error)
+    }
+  }
+
   return (
     <View style={styles.rectangleParent}>
-      <View style={styles.rectangle} />
-      <View style={styles.pigeonCarParent}>
-        <Text style={styles.pigeonCar}>Pigeon Car</Text>
-        <Text style={styles.hrsAgo}>{timestamp}</Text>
+      <View className="mb-10">
+        <View className="flex flex-row  justify-center mb-5 items-center">
+          <Text style={styles.typos} >{author} - </Text>
+          <Text className="ml-1 text-[12px]" style={styles.hrsAgo}>{humanReadableDate} Ago</Text>
+        </View>
+
         <Text
           style={styles.isThereA}
-        >{`Is there a therapy which can cure crossdressing & bdsm compulsion?`}</Text>
-        <Image
+          className="mb-4"
+          numberOfLines={4}
+        >{description}</Text>
+
+        <MaterialCommunityIcons
           style={styles.groupChild}
-          contentFit="cover"
-          source={imageTimestamp}
+          name="account-circle"
+          size={35}
+          color="black"
         />
       </View>
-      <View style={[styles.groupParent, styles.parentLayout]}>
-        <View style={[styles.wrapper, styles.parentLayout]}>
-          <Text style={[styles.text, styles.textTypo]}>2</Text>
-        </View>
-        <Image
-          style={styles.akarIconscomment}
-          contentFit="cover"
-          source={require("../assets/comment-icon.png")}
-        />
+
+      <View className="flex flex-row justify-end mt-1 space-x-5">
+        <TouchableOpacity
+          onPress={handLikeButton}
+          className="flex flex-row justify-center items-center space-x-2"
+        >
+          <Image
+            className="h-6 w-6"
+            contentFit="cover"
+            source={isLiked ? require("../assets/like-button.png") : require("../assets/like-button-active.png")}
+          />
+          <Text >{likes.length}</Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity className="flex flex-row justify-center items-center space-x-2">
+          <Image
+            className="h-6 w-6"
+            contentFit="cover"
+            source={require("../assets/comment-icon.png")}
+          />
+          <View >
+            <Text >{comments.length}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image
+            className="h-6 w-6"
+            contentFit="cover"
+            source={require("../assets/share-icon.png")}
+          />
+        </TouchableOpacity>
+
       </View>
-      <View style={[styles.parent, styles.parentLayout]}>
-        <Text style={[styles.text1, styles.textTypo]}>12</Text>
-        <Image
-          style={[styles.antDesignlikeOutlinedIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/like-button.png")}
-        />
-      </View>
-      <View style={styles.groupItem} />
-      <Image
-        style={[styles.bxshareIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/share-icon.png")}
-      />
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  parentLayout: {
-    height: 20,
-    position: "absolute",
-  },
-  textTypo: {
-    lineHeight: 20,
+  typos: {
     fontSize: 13,
     color: Color.dimgray_100,
+    fontFamily: FontFamily.epilogueRegular
+  },
+
+  textTypo: {
+    color: Color.dimgray_100,
     fontFamily: FontFamily.rubikRegular,
-    textAlign: "left",
-    top: 0,
-    position: "absolute",
-  },
-  iconLayout: {
-    width: 20,
-    overflow: "hidden",
-    height: 20,
-    position: "absolute",
-  },
-  rectangle: {
-    height: 108,
-    left: 0,
-    top: 0,
-    position: "absolute",
-    width: 325,
-  },
-  pigeonCar: {
-    fontSize: FontSize.size_sm,
-    fontWeight: "500",
-    fontFamily: FontFamily.rubikMedium,
-    textAlign: "left",
-    color: Color.dimgray_200,
-    lineHeight: 18,
-    left: 52,
-    top: 0,
-    position: "absolute",
   },
   hrsAgo: {
-    left: 126,
     fontSize: FontSize.size_xs,
     opacity: 0.7,
     color: Color.dimgray_100,
     fontFamily: FontFamily.rubikRegular,
-    textAlign: "left",
-    lineHeight: 18,
-    top: 0,
-    position: "absolute",
+
   },
   isThereA: {
     top: 22,
@@ -114,60 +137,7 @@ const styles = StyleSheet.create({
     top: 0,
     position: "absolute",
   },
-  pigeonCarParent: {
-    left: 1,
-    width: 319,
-    height: 58,
-    top: 0,
-    position: "absolute",
-  },
-  text: {
-    left: 0,
-  },
-  wrapper: {
-    left: 26,
-    width: 8,
-    top: 0,
-  },
-  akarIconscomment: {
-    top: 2,
-    width: 18,
-    height: 18,
-    overflow: "hidden",
-    left: 0,
-    position: "absolute",
-  },
-  groupParent: {
-    left: 122,
-    width: 34,
-    top: 74,
-  },
-  text1: {
-    left: 27,
-  },
-  antDesignlikeOutlinedIcon: {
-    left: 0,
-    top: 0,
-  },
-  parent: {
-    left: 53,
-    width: 41,
-    top: 74,
-  },
-  groupItem: {
-    top: 110,
-    borderStyle: "solid",
-    borderColor: "rgba(217, 216, 216, 0.3)",
-    borderTopWidth: 1,
-    width: 326,
-    height: 1,
-    left: 0,
-    position: "absolute",
-  },
-  bxshareIcon: {
-    left: 305,
-    top: 74,
-  },
+
   rectangleParent: {
     height: 110,
     marginTop: 16,

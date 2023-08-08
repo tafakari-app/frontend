@@ -2,6 +2,8 @@ import AppBottomTabs from './AppBottomTabs';
 import * as React from "react";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AddJournalEntry from "../screens/AppScreens/AddJournalEntry"
+
 const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
@@ -25,6 +27,15 @@ const AppNavigation = () => {
             <Stack.Screen
                 name="AppBottomTabs"
                 component={AppBottomTabs}
+                options={{
+                    headerShown: false,
+                    presentation: "fullScreenModal",
+                    animation: "default"
+                }}
+            />
+            <Stack.Screen
+                name="AddJournalEntry"
+                component={AddJournalEntry}
                 options={{
                     headerShown: false,
                     presentation: "fullScreenModal",

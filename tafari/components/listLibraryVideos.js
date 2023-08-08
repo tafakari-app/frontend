@@ -16,7 +16,7 @@ const ListLibraryVideos = ({ video }) => {
       <View style={styles.cardContent}>
         <Text style={styles.title}>{video?.title}</Text>
         <Text style={styles.author}>Author Name - {video?.author}</Text>
-        <Text style={styles.description}>{video?.description}</Text>
+        <Text style={styles.description} numberOfLines={showVideo ? 0 : 2}>{video?.description}</Text>
 
         {showVideo && (
           <View className=" mt-4 ">
