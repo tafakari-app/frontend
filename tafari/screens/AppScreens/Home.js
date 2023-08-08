@@ -1,8 +1,6 @@
 import * as React from "react";
 import { StyleSheet, View, ScrollView, StatusBar, TouchableOpacity, Text } from "react-native";
 import { Image } from "expo-image";
-import SelfConquerorContainer from "../../components/SelfConquerorContainer";
-import FeelingSection from "../../components/FeelingSection";
 import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
 import { getTimeOfDay } from "../../utils/GetGrettings";
@@ -17,7 +15,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Home = () => {
   const [canClick, setCanClick] = useState(true);
   const [lastClickedDate, setLastClickedDate] = useState(null);
-  const [visibleFeelings, setVisibleFeelings] = useState(feelings);
 
 
   const checkCanClick = async () => {
@@ -26,9 +23,9 @@ const Home = () => {
       if (lastDate) {
         const today = new Date().toDateString();
         if (lastDate === today) {
-          setCanClick(false); // User has already clicked today
+          setCanClick(false);
         } else {
-          setCanClick(true); // User can click because it's a new day
+          setCanClick(true);
         }
       }
     } catch (error) {
@@ -38,24 +35,29 @@ const Home = () => {
 
   const handleFeelingClick = async (index) => {
     if (canClick) {
-      // Handle the click action here (e.g., registering the feeling)
+      const registeredFeeling = feelings[index].name
 
-      // Store the current date in AsyncStorage to track the last click
       try {
-        const today = new Date().toDateString();
-        await AsyncStorage.setItem('@LastClickedDate', today);
-        setLastClickedDate(today);
-        setCanClick(false);
-
-        // Remove the clicked feeling from the visibleFeelings array
-        const newVisibleFeelings = [...visibleFeelings];
-        newVisibleFeelings.splice(index, 1);
-        setVisibleFeelings(newVisibleFeelings);
+        const response = await axios.post(`${API_URL}feelings`, {
+          emotion: registeredFeeling,
+        });
+        const status = response.status;
+        if (status === 201) {
+          try {
+            const today = new Date().toDateString();
+            await AsyncStorage.setItem('@LastClickedDate', today);
+            setLastClickedDate(today);
+            setCanClick(false)
+          } catch (error) {
+            console.error('Error storing data in AsyncStorage:', error);
+          }
+        }
       } catch (error) {
-        console.error('Error storing data in AsyncStorage:', error);
+        console.log(error)
       }
     }
   };
+
 
 
 
@@ -101,28 +103,34 @@ const Home = () => {
 
 
         {/* Self Conqueror and feelings section */}
-        <View style={styles.container}>
-          <Text style={styles.heading}>How are you feeling today?</Text>
-          <ScrollView
-            horizontal
-            contentContainerStyle={styles.scrollContainer}
-            showsHorizontalScrollIndicator={false}
-          >
-            {visibleFeelings?.map((feeling, index) => (
-              <View key={index} className="flex align-middle">
-                <TouchableOpacity
-                  key={index}
-                  style={[styles.feelingBox, { backgroundColor: feeling.color }]}
-                  disabled={!canClick}
-                  onPress={() => handleFeelingClick(index)}
-                >
-                  <Feather name={feeling.icon} size={50} color="white" />
-                </TouchableOpacity>
-                <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+
+        {
+          canClick && (
+            <View style={styles.container}>
+              <Text style={styles.heading}>How are you feeling today?</Text>
+              <ScrollView
+                horizontal
+                contentContainerStyle={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}
+              >
+                {feelings?.map((feeling, index) => (
+                  <View key={index} className="flex align-middle">
+                    <TouchableOpacity
+                      key={index}
+                      style={[styles.feelingBox, { backgroundColor: feeling.color }]}
+                      disabled={!canClick}
+                      onPress={() => handleFeelingClick(index)}
+                    >
+                      <Feather name={feeling.icon} size={50} color="white" />
+                    </TouchableOpacity>
+                    <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )
+        }
+
 
         <View className="mt-5 py-5 flex flex-row bg-[#FEF3E7] rounded-xl justify-between items-center" >
           <View className="flex mt-4 px-4">
@@ -136,9 +144,9 @@ const Home = () => {
             </Text>
 
             <TouchableOpacity
-              className="mt-4 ml-6"
+              className="mt-4 ml-1"
             >
-              <Text className="text-[#FE8235] font-[16px]">Access </Text>
+              <Text className="text-[#FE8235] font-bold">Access </Text>
             </TouchableOpacity>
           </View>
           <Image
