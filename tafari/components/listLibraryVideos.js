@@ -4,7 +4,7 @@ import { FontSize, Color, FontFamily } from "../GlobalStyles";
 import { WebView } from "react-native-webview";
 import YoutubePlayer from 'react-native-youtube-iframe';
 
-const CardContainer = ({ video }) => {
+const ListLibraryVideos = ({ video }) => {
   const [showVideo, setShowVideo] = React.useState(false);
 
   const openYouTubeVideo = () => {
@@ -45,7 +45,7 @@ const CardContainer = ({ video }) => {
 
 const styles = {
   cardContainer: {
-    marginTop: 5,
+    marginTop: 20,
     padding: 20,
     backgroundColor: "#FEF3E7",
     borderRadius: 10,
@@ -65,14 +65,14 @@ const styles = {
     fontSize: FontSize.size_xs,
     fontWeight: "500",
     color: Color.dimgray_200,
-    marginTop: 6,
-    opacity: 0.9,
+    marginTop: 10,
+    marginBottom:10,
   },
   description: {
-    fontSize: FontSize.size_base,
     fontFamily: FontFamily.rubikRegular,
     color: "#371B34",
     marginTop: 6,
+    fontSize:FontSize.size_sm,
   },
   videoContainer: {
     height: 400,
@@ -81,7 +81,7 @@ const styles = {
   watchButton: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6,
+    marginTop: 10,
   },
   watchText: {
     fontSize: FontSize.size_base,
@@ -96,4 +96,4 @@ const styles = {
   },
 };
 
-export default CardContainer;
+export default ListLibraryVideos;
