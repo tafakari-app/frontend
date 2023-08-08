@@ -4,17 +4,18 @@ import { Image } from "expo-image";
 import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
 import { getTimeOfDay } from "../../utils/GetGrettings";
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { API_URL } from "../../app/context/AuthContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useNavigation } from '@react-navigation/native';
 
 
 const Home = () => {
   const [canClick, setCanClick] = useState(true);
   const [lastClickedDate, setLastClickedDate] = useState(null);
+  const navigation = useNavigation();
 
 
   const checkCanClick = async () => {
@@ -144,9 +145,12 @@ const Home = () => {
             </Text>
 
             <TouchableOpacity
-              className="mt-4 ml-1"
+              className="mt-4 ml-1 flex flex-row items-center"
+              onPress={() => navigation.navigate("Library")}
             >
               <Text className="text-[#FE8235] font-bold">Access </Text>
+              <MaterialCommunityIcons name="arrow-right" size={24} color="#FE8235" />
+
             </TouchableOpacity>
           </View>
           <Image
@@ -159,16 +163,18 @@ const Home = () => {
 
         <View className="flex mt-9 flex-row justify-around items-center">
           <TouchableOpacity
+            onPress={() => navigation.navigate("Journal")}
             className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
           >
             <Ionicons name="journal" size={24} color="black" />
-            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
+            <Text className="ml-2 text-[#573926] text-[14px]">{" "}Journal{" "}</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate("Community")}
             className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
           >
-            <Ionicons name="journal" size={24} color="black" />
-            <Text className="ml-2 text-[#573926] text-[14px]">Journal</Text>
+            <Ionicons name="people" size={24} color="black" />
+            <Text className="ml-2 text-[#573926] text-[14px]">Community</Text>
           </TouchableOpacity>
 
         </View>
@@ -193,8 +199,9 @@ const Home = () => {
             </Text>
             <View style={[styles.watchNow, styles.watchLayout]}>
               <View style={[styles.watchNowChild, styles.watchLayout]} />
-              <Text style={[styles.start, styles.startClr]}>Start</Text>
+              <Text onPress={() => navigation.navigate("Journal")} style={[styles.start, styles.startClr]}>Start</Text>
               <Image
+
                 style={[
                   styles.evaarrowBackFillIcon1,
                   styles.evaarrowIconLayout,
