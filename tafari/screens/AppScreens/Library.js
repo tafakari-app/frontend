@@ -1,57 +1,74 @@
 import * as React from "react";
-import { StyleSheet, View, ScrollView, StatusBar, Text, TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
-import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, View, ScrollView, StatusBar, Text, FlatList, ActivityIndicator } from "react-native";
 import CardContainer from "../../components/CardContainer";
 import { FontFamily, Border, Color, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
-import { getTimeOfDay } from "../../utils/GetGrettings";
 import tw from "twrnc";
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { API_URL } from "../../app/context/AuthContext";
+import axios from 'axios';
+import ListLibraryVideos from "../../components/listLibraryVideos";
+import { useNavigation,useIsFocused } from "@react-navigation/native";
 
 
 const Library = () => {
-  const navigation = useNavigation();
-  const greeting = getTimeOfDay();
+  const [videos, setVideos] = useState([])
+  const [error, setError] = useState(null);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const getAllVideos = async () => {
+      try {
+        const response = await axios.get(`${API_URL}selfhelp/`);
+        const data = response.data; // Access the data property of the response
+        setVideos(data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAllVideos();
+  }, [isFocused])
+
+  const renderVideoCard = ({ item }) => (
+    <ListLibraryVideos video={item} />
+  );
+
+
+
 
   return (
     <View className="flex flex-1 bg-[#fbfbfb] -mt-10 ">
       <StatusBar barStyle="dark-content" />
       <SectionGreetings />
 
-      <ScrollView
-        className="mt-3 mx-4 mb-16"
-        showsVerticalScrollIndicator={false}
-      >
 
+      {
+        videos ? (
+          <>
+            <View className="flex flex-row justify-center mb-5 items-center">
+              <Text style={[styles.textTypo]}>
+                Get Videos on self help
+              </Text>
+            </View>
 
-        <CardContainer
-          textContent="Self Help Videos to help you In your Journey"
-          description="text One"
-          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
-        />
+            <FlatList
+              className="mt-3 mx-4 mb-16"
+              data={videos.videos}
+              keyExtractor={(item) => item.id.toString()} // Adjust the key extractor based on your data structure
+              renderItem={renderVideoCard}
+              contentContainerStyle={styles.flatListContainer}
+              showsVerticalScrollIndicator={false}
+            />
 
-        <View style={styles.welcomeBackSarinaWrapper}>
-          <Text style={[styles.welcomeBackSarina, styles.textTypo]}>
-            More Videos
-          </Text>
-        </View>
-        <CardContainer
-          textContent="Lorem One"
-          description="text One"
-          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
-        />
-        <CardContainer
-          textContent="Lorem Two"
-          description="text Two"
-          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
-          />
-        <CardContainer
-          textContent="Lorem Three"
-          description="text Three"
-          videolink="https://www.youtube.com/watch?v=5H7pQw5x7Rc"
-        />
-      </ScrollView>
+          </>
+
+        ) : (
+          <View style={[tw`flex-1 justify-center items-center`]}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )
+      }
+
 
     </View>
   );
@@ -144,17 +161,9 @@ const styles = StyleSheet.create({
     height: 37,
   },
   welcomeBackSarina: {
-    top: 0,
-    left: 0,
     fontSize: FontSize.size_lg,
     lineHeight: 24,
     color: Color.gray_300,
-    width: 308,
-  },
-  welcomeBackSarinaWrapper: {
-    height: 24,
-    marginTop: 26,
-    width: 308,
   },
   headerParent: {
     top: 45,

@@ -13,7 +13,8 @@ export default function Page() {
 }
 
 export const Layout = () => {
-  const { AuthState, onLogin, onRegister, onLogout } = useAuth();
+  const {AuthState} = useAuth();
+
 
   return (
     <NavigationContainer independent={true}>

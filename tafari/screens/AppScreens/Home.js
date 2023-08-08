@@ -1,19 +1,78 @@
 import * as React from "react";
 import { StyleSheet, View, ScrollView, StatusBar, TouchableOpacity, Text } from "react-native";
 import { Image } from "expo-image";
-import SelfConquerorContainer from "../../components/SelfConquerorContainer";
-import FeelingSection from "../../components/FeelingSection";
 import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
-import tw from "twrnc";
 import { getTimeOfDay } from "../../utils/GetGrettings";
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { API_URL } from "../../app/context/AuthContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 
 
 const Home = () => {
+  const [canClick, setCanClick] = useState(true);
+  const [lastClickedDate, setLastClickedDate] = useState(null);
   const navigation = useNavigation();
+
+
+  const checkCanClick = async () => {
+    try {
+      const lastDate = await AsyncStorage.getItem('@LastClickedDate');
+      if (lastDate) {
+        const today = new Date().toDateString();
+        if (lastDate === today) {
+          setCanClick(false);
+        } else {
+          setCanClick(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error reading data from AsyncStorage:', error);
+    }
+  };
+
+  const handleFeelingClick = async (index) => {
+    if (canClick) {
+      const registeredFeeling = feelings[index].name
+
+      try {
+        const response = await axios.post(`${API_URL}feelings`, {
+          emotion: registeredFeeling,
+        });
+        const status = response.status;
+        if (status === 201) {
+          try {
+            const today = new Date().toDateString();
+            await AsyncStorage.setItem('@LastClickedDate', today);
+            setLastClickedDate(today);
+            setCanClick(false)
+          } catch (error) {
+            console.error('Error storing data in AsyncStorage:', error);
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  };
+
+
+
+
+  const [userName, setUserName] = useState();
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await axios.get(`${API_URL}users/users/me/`);
+      setUserName(user.data.fullname);
+    }
+    checkCanClick();
+    getUser();
+  }, []);
+
   const feelings = [
     { name: 'Happy', icon: 'smile', color: '#FFC107' },
     { name: 'Sad', icon: 'frown', color: '#2196F3' },
@@ -40,30 +99,40 @@ const Home = () => {
         <View className="flex mt-3 flex-row mb-3">
           <Text className="text-2xl font-bold text-[#371B34]">
             <Text className="font-medium">{greeting}, </Text> {'\n'}
-            Brian!
+            {userName?.slice(0, 8)}!
           </Text>
         </View>
 
 
         {/* Self Conqueror and feelings section */}
-        <View style={styles.container}>
-          <Text style={styles.heading}>How are you feeling today?</Text>
-          <ScrollView
-            horizontal
-            className="py-2"
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
-          >
-            {feelings.map((feeling, index) => (
-              <View key={index} className="flex align-middle">
-                <TouchableOpacity key={index} style={[styles.feelingBox, { backgroundColor: feeling.color }]}>
-                  <Feather name={feeling.icon} size={50} color="white" />
-                </TouchableOpacity>
-                <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+
+        {
+          canClick && (
+            <View style={styles.container}>
+              <Text style={styles.heading}>How are you feeling today?</Text>
+              <ScrollView
+                horizontal
+                contentContainerStyle={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}
+              >
+                {feelings?.map((feeling, index) => (
+                  <View key={index} className="flex align-middle">
+                    <TouchableOpacity
+                      key={index}
+                      style={[styles.feelingBox, { backgroundColor: feeling.color }]}
+                      disabled={!canClick}
+                      onPress={() => handleFeelingClick(index)}
+                    >
+                      <Feather name={feeling.icon} size={50} color="white" />
+                    </TouchableOpacity>
+                    <Text className="text-[#828282] font-semibold text-[12px] ml-4">{feeling.name}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )
+        }
+
 
         <View className="mt-5 py-5 flex flex-row bg-[#FEF3E7] rounded-xl justify-between items-center" >
           <View className="flex mt-4 px-4">
@@ -77,10 +146,12 @@ const Home = () => {
             </Text>
 
             <TouchableOpacity
-              className="mt-4 ml-6"
-              onPress={() => navigation.navigate('Library')}
-            >
-              <Text className="text-[#FE8235] font-[16px]">Access </Text>
+              className="mt-4 ml-1 flex flex-row items-center"
+              onPress={() => navigation.navigate("Library")}
+
+              <Text className="text-[#FE8235] font-bold">Access </Text>
+              <MaterialCommunityIcons name="arrow-right" size={24} color="#FE8235" />
+
             </TouchableOpacity>
           </View>
           <Image
@@ -88,6 +159,24 @@ const Home = () => {
             className="h-50 w-50"
             source={require("../../assets/icons/ion_journal.png")}
           />
+
+        </View>
+
+        <View className="flex mt-9 flex-row justify-around items-center">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Journal")}
+            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
+          >
+            <Ionicons name="journal" size={24} color="black" />
+            <Text className="ml-2 text-[#573926] text-[14px]">{" "}Journal{" "}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Community")}
+            className="flex  px-9 py-4 rounded-3xl  flex-row items-center justify-between bg-[#F4F3F1]"
+          >
+            <Ionicons name="people" size={24} color="black" />
+            <Text className="ml-2 text-[#573926] text-[14px]">Community</Text>
+          </TouchableOpacity>
 
         </View>
 
@@ -109,23 +198,20 @@ const Home = () => {
             <Text style={[styles.getBackChat, styles.startClr]}>
               Get back chat access and session credits
             </Text>
-            <TouchableOpacity
-              style={[styles.watchNow, styles.watchLayout]}
-              onPress={() => navigation.navigate('Journal')}
-            >
-              <View style={[styles.watchNow, styles.watchLayout]}>
-                <View style={[styles.watchNowChild, styles.watchLayout]} />
-                <Text style={[styles.start, styles.startClr]}>Start</Text>
-                <Image
-                  style={[
-                    styles.evaarrowBackFillIcon1,
-                    styles.evaarrowIconLayout,
-                  ]}
-                  contentFit="cover"
-                  source={require("../../assets/evaarrowbackfill-white.png")}
-                />
-              </View>
-            </TouchableOpacity>
+<View style={[styles.watchNow, styles.watchLayout]}>
+              <View style={[styles.watchNowChild, styles.watchLayout]} />
+              <Text onPress={() => navigation.navigate("Journal")} style={[styles.start, styles.startClr]}>Start</Text>
+              <Image
+
+                style={[
+                  styles.evaarrowBackFillIcon1,
+                  styles.evaarrowIconLayout,
+                ]}
+                contentFit="cover"
+                source={require("../../assets/evaarrowbackfill-white.png")}
+              />
+            </View>
+
           </View>
           <Image
             style={[styles.meditationIcon, styles.iconPosition]}

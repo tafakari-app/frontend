@@ -1,161 +1,123 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, ImageSourcePropType, TouchableOpacity, TextInput, Button } from "react-native";
+import * as React from "react";
+import { StyleSheet, View, Text, ImageSourcePropType, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from "axios";
+import { API_URL } from "../app/context/AuthContext";
+import { useState } from "react";
 
-const ContainerCardForm = ({ author = 'Pigeon Car',
-  timestamp,
-  content = 'Default content here',
-  imageTimestamp,
-  commentsCount = 0, likes }) => {
-  // likes
+const ContainerCardForm = ({ ID, author, timestamp, imageTimestamp, description, likes, comments }) => {
+  const isoDateString = timestamp;
+  const postDate = new Date(isoDateString);
+  const currentDate = new Date();
+  const timeDifference = currentDate - postDate;
   const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes);
-
-  // comments
-  const [comments, setComments] = useState([]);
-  const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState('');
-  const [commentCount, setCommentCount] = useState(commentsCount);
 
 
-  const handleLike = () => {
-    if (isLiked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
+  let humanReadableDate;
+
+  if (timeDifference < 1000 * 60 * 60) { // Less than an hour
+    const minutes = Math.floor(timeDifference / (1000 * 60));
+    humanReadableDate = `${minutes}m`;
+  } else if (timeDifference < 1000 * 60 * 60 * 24) { // Less than a day
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    humanReadableDate = `${hours}h`;
+  } else if (timeDifference < 1000 * 60 * 60 * 24 * 30) { // Less than a month
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    humanReadableDate = `${days}d`;
+  } else {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    humanReadableDate = postDate.toLocaleDateString('en-US', options);
+  }
+
+  const handLikeButton = async () => {
+    try {
+      const response = await axios.post(`${API_URL}community/like-post/${ID}/`);
+      if (response.status === 200 ){
+        setIsLiked(true);
+      }
+    } catch (error) {
+      alert("Error: " + error)
     }
-    setIsLiked(!isLiked);
-  };
-
-  const handlePostComments = () => {
-    console.log("Comment posted:", comments);
-    if (newComment.trim() !== '') {
-      setComments(prevComments => [...prevComments, newComment]);
-      setCommentCount(prevCount => prevCount + 1);
-    }
-    // TODO: Add your logic to handle the comment (e.g., update state, send to server)
-
-    // Clear the comment input after posting
-    setNewComment('');
-  };
+  }
 
   return (
     <View style={styles.rectangleParent}>
-      <View style={styles.rectangle} />
-      <View style={styles.pigeonCarParent}>
-        <Text style={styles.pigeonCar}>{author}</Text>
-        <Text style={styles.hrsAgo}>{timestamp}</Text>
+      <View className="mb-10">
+        <View className="flex flex-row  justify-center mb-5 items-center">
+          <Text style={styles.typos} >{author} - </Text>
+          <Text className="ml-1 text-[12px]" style={styles.hrsAgo}>{humanReadableDate} Ago</Text>
+        </View>
+
         <Text
           style={styles.isThereA}
-        >{content}</Text>
-        <Image
+          className="mb-4"
+          numberOfLines={4}
+        >{description}</Text>
+
+        <MaterialCommunityIcons
           style={styles.groupChild}
-          contentFit="cover"
-          source={imageTimestamp}
+          name="account-circle"
+          size={35}
+          color="black"
         />
       </View>
-      <View style={[styles.groupParent, styles.parentLayout]}>
-        <View style={[styles.wrapper, styles.parentLayout]}>
-          <Text style={[styles.text, styles.textTypo]}>{commentCount}</Text>
-        </View>
-        <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+
+      <View className="flex flex-row justify-end mt-1 space-x-5">
+        <TouchableOpacity
+          onPress={handLikeButton}
+          className="flex flex-row justify-center items-center space-x-2"
+        >
           <Image
-            style={styles.akarIconscomment}
+            className="h-6 w-6"
             contentFit="cover"
-            source={require('../assets/comment-icon.png')}
+            source={isLiked ? require("../assets/like-button.png") : require("../assets/like-button-active.png")}
           />
+          <Text >{likes.length}</Text>
+
         </TouchableOpacity>
-      </View>
-      <View style={[styles.parent, styles.parentLayout]}>
-        <Text style={[styles.text1, styles.textTypo]}>{likeCount}</Text>
-        <TouchableOpacity onPress={handleLike}>
+        <TouchableOpacity className="flex flex-row justify-center items-center space-x-2">
           <Image
-            style={[styles.antDesignlikeOutlinedIcon, styles.iconLayout]}
+            className="h-6 w-6"
             contentFit="cover"
-            source={isLiked ? require('../assets/like-button-active.png') : require('../assets/like-button.png')}
+            source={require("../assets/comment-icon.png")}
           />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.groupItem} />
-      <Image
-        style={[styles.bxshareIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/share-icon.png")}
-      />
-      {showComments && (
-        <View style={styles.commentSection}>
-          <TouchableOpacity style={styles.closeButton} onPress={() => setShowComments(false)}>
-            <Text style={{ fontWeight: 'bold' }}>X</Text>
-          </TouchableOpacity>
-          {comments.map((comment, index) => (
-            <Text key={index} style={styles.commentText}>{comment}</Text>
-          ))}
-          <View style={styles.commentInputWrapper}>
-            <TextInput
-              style={styles.commentInput}
-              placeholder="Write a comment..."
-              value={newComment}
-              onChangeText={setNewComment}
-            />
-            <TouchableOpacity style={styles.postButton} onPress={handlePostComments}>
-              <Text>Post</Text>
-            </TouchableOpacity>
+          <View >
+            <Text >{comments.length}</Text>
           </View>
-        </View>
-      )}
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image
+            className="h-6 w-6"
+            contentFit="cover"
+            source={require("../assets/share-icon.png")}
+          />
+        </TouchableOpacity>
+
+      </View>
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  parentLayout: {
-    height: 20,
-    position: "absolute",
-  },
-  textTypo: {
-    lineHeight: 20,
+  typos: {
     fontSize: 13,
     color: Color.dimgray_100,
+    fontFamily: FontFamily.epilogueRegular
+  },
+
+  textTypo: {
+    color: Color.dimgray_100,
     fontFamily: FontFamily.rubikRegular,
-    textAlign: "left",
-    top: 0,
-    position: "absolute",
-  },
-  iconLayout: {
-    width: 20,
-    overflow: "hidden",
-    height: 20,
-    position: "absolute",
-  },
-  rectangle: {
-    height: 108,
-    left: 0,
-    top: 0,
-    position: "absolute",
-    width: 325,
-  },
-  pigeonCar: {
-    fontSize: FontSize.size_sm,
-    fontWeight: "500",
-    fontFamily: FontFamily.rubikMedium,
-    textAlign: "left",
-    color: Color.dimgray_200,
-    lineHeight: 18,
-    left: 52,
-    top: 0,
-    position: "absolute",
   },
   hrsAgo: {
-    left: 126,
     fontSize: FontSize.size_xs,
     opacity: 0.7,
     color: Color.dimgray_100,
     fontFamily: FontFamily.rubikRegular,
-    textAlign: "left",
-    lineHeight: 18,
-    top: 0,
-    position: "absolute",
+
   },
   isThereA: {
     top: 22,
@@ -175,106 +137,11 @@ const styles = StyleSheet.create({
     top: 0,
     position: "absolute",
   },
-  pigeonCarParent: {
-    left: 1,
-    width: 319,
-    height: 58,
-    top: 0,
-    position: "absolute",
-  },
-  text: {
-    left: 0,
-  },
-  wrapper: {
-    left: 26,
-    width: 8,
-    top: 0,
-  },
-  akarIconscomment: {
-    top: 2,
-    width: 18,
-    height: 18,
-    overflow: "hidden",
-    left: 0,
-    position: "absolute",
-  },
-  groupParent: {
-    left: 122,
-    width: 34,
-    top: 74,
-  },
-  text1: {
-    left: 27,
-  },
-  antDesignlikeOutlinedIcon: {
-    left: 0,
-    top: 0,
-  },
-  parent: {
-    left: 53,
-    width: 41,
-    top: 74,
-  },
-  groupItem: {
-    top: 110,
-    borderStyle: "solid",
-    borderColor: "rgba(217, 216, 216, 0.3)",
-    borderTopWidth: 1,
-    width: 326,
-    height: 1,
-    left: 0,
-    position: "absolute",
-  },
-  bxshareIcon: {
-    left: 305,
-    top: 74,
-  },
+
   rectangleParent: {
     height: 110,
     marginTop: 16,
     width: 325,
-  },
-  commentInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 1,
-    left: 5,
-
-  },
-  commentSection: {
-    padding: 10,
-    backgroundColor: 'linen',
-    width: '100%',
-  },
-  commentInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-  },
-  postButton: {
-    padding: 10,
-    backgroundColor: '#007BFF',
-    borderRadius: 5,
-    marginRight: 5,
-  },
-  commentText: {
-    marginBottom: 5,
-    fontSize: 14,
-    color: '#333',
-    marginLeft: 10,
-  },
-  commentInputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
   },
 });
 

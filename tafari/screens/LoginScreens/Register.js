@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, StatusBar, Platform, StyleSheet, TextInput,ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, KeyboardAvoidingView,Keyboard, StatusBar, Platform, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { FontFamily, FontSize, Padding, Border } from '../../GlobalStyles';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,8 +15,8 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRe_password, setShowRe_password] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState('');
   const toggleRe_PasswordVisibility = () => {
     setShowRe_password((prevShowPassword) => !prevShowPassword);
   };
@@ -26,11 +26,29 @@ const Register = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleRegister = (values) => {
-
-    console.log(values)
-    // if the register was successful
-    setShowSuccess(true);
+  const handleRegister = async (values) => {
+    Keyboard.dismiss();
+    try {
+      const result = await onRegister(
+        values.fullname,
+        values.email,
+        values.password,
+        values.re_password
+      );
+      if (result && result.status === 201) {
+        setShowSuccess(true);
+      } else {
+        setError('Something went wrong');
+        setShowError(true);
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.detail);
+      } else {
+        setError('Something went wrong');
+      }
+      setShowError(true); 
+    }
   };
 
   const handleLogin = () => {
@@ -59,10 +77,13 @@ const Register = () => {
       // After 3 seconds, hide the success message
       const timer = setTimeout(() => {
         setShowSuccess(false);
-        
+
       }, 3000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer)
+        navigation.push('Login');
+      };
     }
   }, [showSuccess]);
 
@@ -165,6 +186,14 @@ const Register = () => {
               <Text style={styles.successText}>Account created successfully!</Text>
             </View>
           )}
+          {showError && (
+            <View className="flex flex-row justify-center items-center">
+              <Ionicons name="close-circle" size={30} color="#FF5733" />
+              <Text style={styles.errorText}>
+                {error}
+                </Text>
+            </View>
+          )}
 
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account?</Text>
@@ -254,7 +283,7 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: FontSize.small,
     fontFamily: FontFamily.epilogueRegular,
-    marginTop: 5,
+    marginTop: 10,
   },
 });
 

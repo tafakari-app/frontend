@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Modal, TextInput, Button } from "react-native";
+import React, {useEffect, useState, useCallback} from "react";
+import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity,Text, ActivityIndicator, Modal, TextInput, Button  } from "react-native";
 import { Image } from "expo-image";
 import TrendingCard from "../../components/TrendingCard";
 import ContainerCardForm from "../../components/ContainerCardForm";
@@ -8,35 +8,54 @@ import { Color, FontFamily, FontSize, Padding, Border } from "../../GlobalStyles
 import SectionGreetings from "../../components/SectionGreetings";
 import SortCommunity from "../../components/SortCommunity";
 import { Ionicons } from "@expo/vector-icons";
+import { API_URL } from "../../app/context/AuthContext";
+import axios from 'axios';
+import { useNavigation,useIsFocused } from "@react-navigation/native";
 
 const Community = () => {
+  const [communityPosts, setCommunityPosts] = useState([])
+  const isFocused = useIsFocused();
 
-  const [posts, setPosts] = useState([
-    {
-      author: 'Pigeon Car',
-      content: 'Stuff about the post',
-      timestamp: '3 hrs ago',
-      imageTimestamp: require('../../assets/ellipse-22.png'),
-      comments: 2,
-      likes: 0,
+  const [isLoading, setIsLoading] = useState(true);
+
+
+
+
+  const fetchPosts = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API_URL}community/`);
+
+      if (response.data && Array.isArray(response.data.results)) {
+        setCommunityPosts(response.data.results)
+      } else {
+        console.error("Invalid response data:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching community posts:", error);
+    } finally {
+      setIsLoading(false);
     }
-  ]);
-  const [showPostModal, setShowPostModal] = useState(false);
-  const [newPost, setNewPost] = useState('');
+  }, []);
 
-  const handleNewPost = () => {
-    const newPostData = {
-      author: 'User', // You can replace 'User' with the actual user's name if available
-      content: newPost,
-      timestamp: new Date().toLocaleString(),
-      imageTimestamp: null, // You can set a default image or leave it null
-      comments: 0,
-      likes: 0,
-    };
-    setPosts([newPostData, ...posts]); // Add the new post to the beginning of the list
-    setNewPost('');
-    setShowPostModal(false);
-  };
+  useEffect(() => {
+    setIsLoading(true);
+    fetchPosts();
+  }, [isFocused, fetchPosts]);
+
+
+  const renderPost = ({ item }) => (
+    <ContainerCardForm
+      ID={item?.ID}
+      author={item?.author?.fullname}
+      timestamp={item?.created_at}
+      imageTimestamp={item?.imageTimestamp}
+      description={item?.description}
+      comments={item?.comments}
+      likes={item?.likes}
+    />
+  );
+
+
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fbfbfb' }}>
@@ -46,23 +65,19 @@ const Community = () => {
         <SortCommunity name="Latest" />
       </View>
 
-      <ScrollView
-        style={{ marginHorizontal: 16, marginBottom: 64 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <TrendingCard />
-        {posts.map((post, index) => (
-          <ContainerCardForm
-            key={index}
-            author={post.author}
-            content={post.content}
-            timestamp={post.timestamp}
-            imageTimestamp={post.imageTimestamp}
-            comments={post.comments}
-            likes={post.likes}
-          />
-        ))}
-      </ScrollView>
+        {isLoading ? (
+        <ActivityIndicator size="large" color="#FE8235" />
+      ) : (
+        <FlatList
+          data={communityPosts}
+          className="mx-4 mb-16"
+          renderItem={renderPost}
+          keyExtractor={(item) => item.ID} // Replace with your data's key extractor
+          onEndReachedThreshold={0.5}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
 
       <Modal
         animationType="slide"

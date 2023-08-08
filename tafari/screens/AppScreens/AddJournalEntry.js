@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Platform, Button, TextInput, StyleSheet, DatePickerIOS, Text, TouchableOpacity, DatePickerAndroid } from 'react-native';
+import { View, Platform, StatusBar, ActivityIndicator, TextInput, StyleSheet, DatePickerIOS, Text, TouchableOpacity, DatePickerAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { API_URL } from "../../app/context/AuthContext";
+
 
 const AddJournalEntry = () => {
     const navigation = useNavigation();
@@ -8,7 +11,7 @@ const AddJournalEntry = () => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-
+    const [loading, setLoading] = useState(false);
     const showAndroidDatePicker = async () => {
         try {
             const { action, year, month, day } = await DatePickerAndroid.open({
@@ -22,13 +25,35 @@ const AddJournalEntry = () => {
         }
     };
 
-    const handleSave = () => {
-        // Save the journal entry (e.g., to a state or database)
-        navigation.goBack();
+    const handleSave = async () => {
+        if (title !== '' && content !== '') {
+            setLoading(true); // Start loading
+
+            const data = {
+                title: title,
+                description: content,
+            };
+
+            try {
+                const result = await axios.post(`${API_URL}journals/create-Journal/`, data);
+                if (result.status === 201) {
+                    navigation.goBack();
+                } else {
+                    alert("Something went wrong! Please try again later");
+                }
+            } catch (error) {
+                alert("An error occurred. Please try again later");
+            }
+
+            setLoading(false); // Stop loading
+        } else {
+            alert("Please fill in both title and description.");
+        }
     };
 
     return (
-        <View style={styles.container}>
+        <View className="px-4 " style={styles.container}>
+            <StatusBar translucent={true} />
             <View style={styles.header}>
                 <TouchableOpacity style={styles.exitButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.saveButtonText}>X</Text>
@@ -44,8 +69,12 @@ const AddJournalEntry = () => {
                         {`${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                    <Text style={styles.saveButtonText}>SAVE</Text>
+                <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
+                    {loading ? (
+                        <ActivityIndicator color="white" size="small" />
+                    ) : (
+                        <Text style={styles.saveButtonText}>SAVE</Text>
+                    )}
                 </TouchableOpacity>
             </View>
 
