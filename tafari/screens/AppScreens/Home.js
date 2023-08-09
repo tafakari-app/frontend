@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { Border, Color, FontFamily, FontSize } from "../../GlobalStyles";
 import SectionGreetings from "../../components/SectionGreetings";
 import { getTimeOfDay } from "../../utils/GetGrettings";
-import { Feather, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { API_URL } from "../../app/context/AuthContext";
@@ -145,14 +145,13 @@ const Home = () => {
               Let’s open up to the things that {"\n"}matter the most
             </Text>
 
-            <TouchableOpacity
-              className="mt-4 ml-1 flex flex-row items-center"
-              onPress={() => navigation.navigate("Library")}
-
-              <Text className="text-[#FE8235] font-bold">Access </Text>
-              <MaterialCommunityIcons name="arrow-right" size={24} color="#FE8235" />
-
+            <TouchableOpacity onPress={() => navigation.navigate("Library")}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text className="text-[#FE8235] font-bold">Access </Text>
+                <MaterialCommunityIcons name="arrow-right" size={24} color="#FE8235" />
+              </View>
             </TouchableOpacity>
+
           </View>
           <Image
             contentFit="cover"
@@ -198,7 +197,7 @@ const Home = () => {
             <Text style={[styles.getBackChat, styles.startClr]}>
               Get back chat access and session credits
             </Text>
-<View style={[styles.watchNow, styles.watchLayout]}>
+            <View style={[styles.watchNow, styles.watchLayout]}>
               <View style={[styles.watchNowChild, styles.watchLayout]} />
               <Text onPress={() => navigation.navigate("Journal")} style={[styles.start, styles.startClr]}>Start</Text>
               <Image

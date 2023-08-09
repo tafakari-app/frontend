@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddJournalEntry from "../screens/AppScreens/AddJournalEntry"
+
 
 const Stack = createNativeStackNavigator();
 
@@ -45,7 +45,7 @@ const AppNavigation = () => {
                     animation: "default"
                 }}
             />
-        
+
             <Stack.Screen
                 name="MySwiper"
                 component={MySwiper}
