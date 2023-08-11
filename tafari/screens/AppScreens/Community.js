@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useCallback} from "react";
-import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity,Text, ActivityIndicator, Modal, TextInput, Button  } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity, Text, ActivityIndicator, Modal, TextInput, Button } from "react-native";
 import { Image } from "expo-image";
 import TrendingCard from "../../components/TrendingCard";
 import ContainerCardForm from "../../components/ContainerCardForm";
@@ -10,15 +10,34 @@ import SortCommunity from "../../components/SortCommunity";
 import { Ionicons } from "@expo/vector-icons";
 import { API_URL } from "../../app/context/AuthContext";
 import axios from 'axios';
-import { useNavigation,useIsFocused } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 const Community = () => {
   const [communityPosts, setCommunityPosts] = useState([])
   const isFocused = useIsFocused();
-
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [newPost, setNewPost] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleNewPost = async () => {
+    try {
+      if (newPost !== "") {
+        const data = {
+          description: newPost,
+        }
+        const response = await axios.post(`${API_URL}community/create-post/`, data
+        );
+        setCommunityPosts([response.data, ...communityPosts]);
+        setNewPost("");
+        setShowPostModal(false);
+      } else {
+        alert("Please Enter a post to submit")
+      }
 
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
 
 
   const fetchPosts = useCallback(async () => {
@@ -26,7 +45,11 @@ const Community = () => {
       const response = await axios.get(`${API_URL}community/`);
 
       if (response.data && Array.isArray(response.data.results)) {
-        setCommunityPosts(response.data.results)
+        const sortedPosts = response.data.results.sort((a, b) => {
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+
+        setCommunityPosts(sortedPosts);
       } else {
         console.error("Invalid response data:", response.data);
       }
@@ -65,7 +88,7 @@ const Community = () => {
         <SortCommunity name="Latest" />
       </View>
 
-        {isLoading ? (
+      {isLoading ? (
         <ActivityIndicator size="large" color="#FE8235" />
       ) : (
         <FlatList

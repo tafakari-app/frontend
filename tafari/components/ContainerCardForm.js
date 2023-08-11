@@ -13,8 +13,7 @@ const ContainerCardForm = ({ ID, author, timestamp, imageTimestamp, description,
   const currentDate = new Date();
   const timeDifference = currentDate - postDate;
   const [isLiked, setIsLiked] = useState(false);
-
-
+  const [likesCount, setLikesCount] = useState(likes.length);
   let humanReadableDate;
 
   if (timeDifference < 1000 * 60 * 60) { // Less than an hour
@@ -31,16 +30,17 @@ const ContainerCardForm = ({ ID, author, timestamp, imageTimestamp, description,
     humanReadableDate = postDate.toLocaleDateString('en-US', options);
   }
 
-  const handLikeButton = async () => {
+  const handleLikeButton = async () => {
     try {
       const response = await axios.post(`${API_URL}community/like-post/${ID}/`);
-      if (response.status === 200 ){
-        setIsLiked(true);
+      if (response.status === 200) {
+        setIsLiked(!isLiked);
+        setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
       }
     } catch (error) {
-      alert("Error: " + error)
+      alert("Error: " + error);
     }
-  }
+  };
 
   return (
     <View style={styles.rectangleParent}>
@@ -66,17 +66,16 @@ const ContainerCardForm = ({ ID, author, timestamp, imageTimestamp, description,
 
       <View className="flex flex-row justify-end mt-1 space-x-5">
         <TouchableOpacity
-          onPress={handLikeButton}
-          className="flex flex-row justify-center items-center space-x-2"
+          onPress={handleLikeButton}
+          style={styles.likeButton}
         >
           <Image
-            className="h-6 w-6"
-            contentFit="cover"
+            style={styles.likeButtonIcon}
             source={isLiked ? require("../assets/like-button.png") : require("../assets/like-button-active.png")}
           />
-          <Text >{likes.length}</Text>
-
+          <Text style={styles.likeButtonText}>{likesCount}</Text>
         </TouchableOpacity>
+
         <TouchableOpacity className="flex flex-row justify-center items-center space-x-2">
           <Image
             className="h-6 w-6"
@@ -136,6 +135,21 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     position: "absolute",
+  },
+  likeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 15,
+  },
+  likeButtonIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  likeButtonText: {
+    fontSize: 14,
+    color: Color.dimgray_100,
+    fontFamily: FontFamily.rubikRegular,
   },
 
   rectangleParent: {
