@@ -1,5 +1,6 @@
 import AppBottomTabs from './AppBottomTabs';
 import AddJournalEntry from "../screens/AppScreens/AddJournalEntry";
+import Profile from '../screens/AppScreens/Profile';
 import MySwiper from './MySwiper';
 import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
@@ -39,6 +40,16 @@ const AppNavigation = () => {
             <Stack.Screen
                 name="AddJournalEntry"
                 component={AddJournalEntry}
+                options={{
+                    headerShown: false,
+                    presentation: "fullScreenModal",
+                    animation: "default"
+                }}
+            />
+
+            <Stack.Screen
+                name="Profile"
+                component={Profile}
                 options={{
                     headerShown: false,
                     presentation: "fullScreenModal",

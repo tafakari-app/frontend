@@ -13,7 +13,7 @@ export default function Page() {
 }
 
 export const Layout = () => {
-  const {AuthState} = useAuth();
+  const { AuthState } = useAuth();
 
 
   return (

@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import tw from 'twrnc';
 import { FontFamily, FontSize, Color } from "../GlobalStyles";
 import { useNavigation } from '@react-navigation/native';
@@ -15,14 +15,19 @@ const SectionGreetings = () => {
         setNotificationCount(0);
         onLogout();
     };
+    const navigateToProfile = () => {
+        navigation.navigate('Profile');
+    }
     return (
         <View className="mt-14 shadow-md ">
             <View className="flex flex-row justify-between mx-4 items-center">
-                <Image
-                    className="w-16 h-16 rounded-full"
-                    contentFit="cover"
-                    source={require("../assets/ellipse-2.png")}
-                />
+                <TouchableOpacity onPress={navigateToProfile}>
+                    <Image
+                        style={{ width: 64, height: 64, borderRadius: 32 }}
+                        resizeMode="cover"
+                        source={require("../assets/ellipse-2.png")}
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity
                     onPress={handlePress}
                 >
