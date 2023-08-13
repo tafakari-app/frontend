@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import SectionGreetings from "../../components/SectionGreetings";
-import { Color, FontFamily, FontSize, Border } from "../../GlobalStyles";
+import { Color, FontFamily, FontSize, } from "../../GlobalStyles";
 import { Calendar } from 'react-native-calendars';
-import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryScatter, VictoryPie, VictoryLabel, Point, Line } from 'victory-native';
+import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryScatter, VictoryPie, VictoryLabel, Line } from 'victory-native';
+
 
 const Profile = () => {
+
+    const [userName, setUserName] = useState();
+    useEffect(() => {
+        const getUser = async () => {
+            const user = await axios.get(`${API_URL}users/users/me/`);
+            setUserName(user.data.fullname);
+        }
+        getUser();
+    }, []);
+
     const [userData, setUserData] = useState({
-        username: "Tito",
+        username: userName,
         profilePic: "../../assets/ellipse-2.png",
-        email: "leadingbusinesscontact@gmail.com",
         // ... any other user data
     });
 
@@ -187,9 +196,7 @@ const Profile = () => {
                         resizeMode="cover"
                         source={require("../../assets/ellipse-2.png")} // Using 'require' for local images.
                     />
-                    <Text style={styles.username}>{userData.username}</Text>
-                    <Text style={styles.email}>{userData.email}</Text>
-                    <Text style={styles.bio}>{userData.bio}</Text>
+                    <Text style={styles.username}>{userData.username || 'Loading...'}</Text>
                 </View>
 
                 <View style={styles.section}>
@@ -333,7 +340,7 @@ const styles = StyleSheet.create({
     therapistName: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: 'Color.dimgray_200'
+        color: Color.dimgray_200
     },
     therapistTitle: {
         fontSize: 14,
@@ -355,6 +362,7 @@ const styles = StyleSheet.create({
     },
     section: {
         paddingBottom: 30,
+        paddingTop: 30,
     },
     profileSection: {
         alignItems: 'center',
