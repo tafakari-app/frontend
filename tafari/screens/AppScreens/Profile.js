@@ -56,7 +56,9 @@ const Profile = () => {
         '2023-08-12': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Anxious'] },
         '2023-08-13': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Happy'] },
         '2023-08-14': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Happy'] },
-        '2023-08-15': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Anxious'] }
+        '2023-08-15': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Anxious'] },
+        '2023-08-16': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Depressed'] },
+        '2023-08-17': { selected: true, marked: true, selectedColor: EMOTION_COLORS['Stressed'] }
     }
 
 
@@ -72,10 +74,13 @@ const Profile = () => {
         { date: "2023-08-08", emotion: 6 },
         { date: "2023-08-09", emotion: 1 },
         { date: "2023-08-10", emotion: 4 },
-        { date: "2023-08-11", emotion: 2 },
+        { date: "2023-08-11", emotion: 5 },
         { date: "2023-08-12", emotion: 3 },
         { date: "2023-08-13", emotion: 5 },
         { date: "2023-08-14", emotion: 3 },
+        { date: "2023-08-15", emotion: 6 },
+        { date: "2023-08-16", emotion: 0 },
+        { date: "2023-08-17", emotion: 1 },
     ];
 
     const emotionFromValue = (value) => {
@@ -196,7 +201,7 @@ const Profile = () => {
                         resizeMode="cover"
                         source={require("../../assets/ellipse-2.png")} // Using 'require' for local images.
                     />
-                    <Text style={styles.username}>{userData.username || 'Loading...'}</Text>
+                    <Text style={styles.username}>Walter Angoye</Text>
                 </View>
 
                 <View style={styles.section}>
@@ -288,8 +293,8 @@ const Profile = () => {
                     <Text style={styles.sectionsText}>Stats</Text>
                     <Text></Text>
                     <Text style={styles.legendText}>Most Common Emotion: Happy</Text>
-                    <Text style={styles.legendText}>Days Journaling: 45</Text>
-                    <Text style={styles.legendText}>Streak: 5 days</Text>
+                    <Text style={styles.legendText}>Days Journaling: 17</Text>
+                    <Text style={styles.legendText}>Streak: 17 days</Text>
                 </View>
 
                 <View style={styles.supportSection}>
