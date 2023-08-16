@@ -12,7 +12,7 @@ git clone https://github.com/tafakari-app/frontend.git
 ```
 - Change dir:
 ```
-cd frontend
+cd frontend/tafakari
 ```
 - Install dependencies:
 ```
