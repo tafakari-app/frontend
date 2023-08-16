@@ -24,14 +24,14 @@ const JournalCard = ({ created_at, title, content, emotion, emotion_predications
                 {content}
             </Text>
 
-            <View className="flex flex-row justify-between items-center mt-5 space-x-5">
+            {/* <View className="flex flex-row justify-between items-center mt-5 space-x-5">
                 <Text style={styles.content}>
                     Emotion: {
                         emotion === 'postive' ? <Text className="text-green-500"> Positive 😄 </Text> : <Text className="text-red-500">Negative 😔 </Text>
                     }
                 </Text>
                 <Text style={styles.content} numberOfLines={2}>Predications: {emotion_predications} %</Text>
-            </View>
+            </View> */}
             <Text style={styles.date}>{humanReadableDate}</Text>
 
         </TouchableOpacity>
