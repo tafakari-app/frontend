@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 
 
 const TOKEN_KEY = 'token';
-export const API_URL = 'https://tafakari-ee6f52a2dd51.herokuapp.com/';
+export const API_URL = 'https://tafakari-7d6ea5b42c18.herokuapp.com/';
 const AuthContext = createContext();
 
 export const useAuth = () => {
