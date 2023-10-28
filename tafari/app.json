@@ -1,6 +1,5 @@
 {
   "expo": {
-
     "scheme": "acme",
     "web": {
       "bundler": "metro"
@@ -14,6 +13,17 @@
       "config": {
         "usesNonExemptEncryption": false
       }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "08123c52-7445-4c98-8f82-ef814340a3c1"
+      }
+    },
+    "android": {
+      "package": "com.elvii.tafari"
     }
   }
 }
